@@ -58,6 +58,11 @@ body {
 }
 header { text-align: center; display: flex; flex-direction: column; gap: 4px; padding-top: 8px; }
 h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 7vw, 44px); line-height: 1.05; margin: 0; letter-spacing: -.02em; }
+.ver {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 3px 9px;
+  font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: .02em; line-height: 1.3;
+  color: var(--fg); background: var(--pill); border: 1px solid var(--pill-line); border-radius: 999px;
+}
 .sub { margin: 0; color: var(--muted); font-size: 14px; }
 .search {
   position: relative; display: flex; align-items: center;
@@ -122,7 +127,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
 <body>
 <div class="wrap">
   <header>
-    <h1>Genel Arayüz</h1>
+    <h1>Genel Arayüz <span class="ver" id="ver"></span></h1>
     <p class="sub" id="sub">Bir simgeye dokun, uygulama açılsın.</p>
   </header>
 
@@ -149,6 +154,8 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
 
 <script>
 (function () {
+  var VERSION = "1.2"; // her değişiklikte artır: 1.3, 1.4 ...
+  document.getElementById("ver").textContent = "v" + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";
   var G = "https://github.com/karadenizmehmet-debug/";
 

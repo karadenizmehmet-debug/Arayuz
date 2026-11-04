@@ -158,7 +158,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
 
 <script>
 (function () {
-  var VERSION = "1.6"; // her değişiklikte artır: 1.7, 1.8 ...
+  var VERSION = "1.7"; // her değişiklikte artır: 1.8, 1.9 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";
@@ -191,7 +191,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
     { name: "BTY Ders", cat: "Ders", hue: 295, icon: "kod", open: U + "Bty-ders/", repo: "Bty-ders", tip: "Bilişim ve Yapay Zekâ yazılı hazırlık" },
     { name: "Nefes", cat: "Kişisel", hue: 178, icon: "nefes", open: U + "Quitcigaret/", repo: "Quitcigaret", tip: "Sigara bırakma takibi" },
     { name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)" },
-    { name: "Arkaplan Silici", cat: "Kişisel", hue: 330, icon: "resim", open: U + "Resim/", repo: "Resim", tip: "Fotoğrafların arka planını toplu siler" }
+    { name: "Arkaplan Silici", cat: "Kişisel", hue: 330, icon: "resim", open: U + "bgremover/", repo: "bgremover", tip: "Fotoğrafların arka planını toplu siler" }
   ];
 
   var out = document.getElementById("out");

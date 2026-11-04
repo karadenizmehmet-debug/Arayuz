@@ -6,133 +6,140 @@
 <meta name="author" content="Mehmet Karadeniz, 2026-2027">
 <meta name="theme-color" content="#0f1a22">
 <title>Genel Arayüz</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a6c8b'/%3E%3Crect x='7' y='7' width='7.5' height='7.5' rx='2' fill='white'/%3E%3Crect x='17.5' y='7' width='7.5' height='7.5' rx='2' fill='white' opacity='.7'/%3E%3Crect x='7' y='17.5' width='7.5' height='7.5' rx='2' fill='white' opacity='.7'/%3E%3Crect x='17.5' y='17.5' width='7.5' height='7.5' rx='2' fill='white'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230a6c8b'/%3E%3Crect x='7' y='7' width='7.5' height='7.5' rx='2.4' fill='white'/%3E%3Crect x='17.5' y='7' width='7.5' height='7.5' rx='2.4' fill='white' opacity='.7'/%3E%3Crect x='7' y='17.5' width='7.5' height='7.5' rx='2.4' fill='white' opacity='.7'/%3E%3Crect x='17.5' y='17.5' width='7.5' height='7.5' rx='2.4' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
-/* Düzen: başlık + arama/filtre, altında tek bir mozaik. Her proje kendi renginde simgeli büyük karo; Pano iki sütun kaplar. */
+/* Düzen: Android ana ekranı gibi. Üstte arama hapı, altında hayalet açıklamasız uygulama simgeleri (squircle + altında ad). */
 :root {
   color-scheme: light;
-  --bg: #edf1f4;
-  --surface: #ffffff;
+  --wall-a: #cfe4ee; --wall-b: #e6dcf2;
   --fg: #13202a;
-  --muted: #55687a;
-  --line: #d3dce3;
+  --muted: #4d6172;
+  --pill: rgba(255,255,255,.72);
+  --pill-line: rgba(19,32,42,.12);
   --accent: #0a6c8b;
-  --on-accent: #ffffff;
-  --ic-l: 0.46; --ic-c: 0.15;
-  --tint-l: 0.94; --tint-c: 0.035;
+  --ic-l1: 0.66; --ic-l2: 0.5; --ic-c: 0.16;
   --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #0f1a22; --surface: #16252f; --fg: #e6edf2; --muted: #93a4b1; --line: #2a3c49;
-    --accent: #5cc3dd; --on-accent: #08222c;
-    --ic-l: 0.82; --ic-c: 0.12; --tint-l: 0.31; --tint-c: 0.055;
+    --wall-a: #0c1a24; --wall-b: #1d1f3d;
+    --fg: #e9f0f5; --muted: #a3b3c0;
+    --pill: rgba(255,255,255,.09); --pill-line: rgba(255,255,255,.14);
+    --accent: #5cc3dd;
+    --ic-l1: 0.7; --ic-l2: 0.52;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0f1a22; --surface: #16252f; --fg: #e6edf2; --muted: #93a4b1; --line: #2a3c49;
-  --accent: #5cc3dd; --on-accent: #08222c;
-  --ic-l: 0.82; --ic-c: 0.12; --tint-l: 0.31; --tint-c: 0.055;
+  --wall-a: #0c1a24; --wall-b: #1d1f3d;
+  --fg: #e9f0f5; --muted: #a3b3c0;
+  --pill: rgba(255,255,255,.09); --pill-line: rgba(255,255,255,.14);
+  --accent: #5cc3dd;
+  --ic-l1: 0.7; --ic-l2: 0.52;
 }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; min-height: 100%; background: var(--wall-a); }
 body {
-  margin: 0; background: var(--bg); color: var(--fg);
-  font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  margin: 0; min-height: 100vh; color: var(--fg);
+  background: linear-gradient(160deg, var(--wall-a), var(--wall-b)) fixed;
+  font-family: var(--font-body); font-size: 15px; line-height: 1.4;
 }
 .wrap {
-  max-width: 1120px; margin: 0 auto;
+  max-width: 760px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: max(32px, env(safe-area-inset-top, 0px)) 40px;
-  display: flex; flex-direction: column; gap: 28px;
+  padding-block: max(28px, env(safe-area-inset-top, 0px)) max(28px, env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; gap: 26px;
 }
-header { display: flex; flex-direction: column; gap: 10px; }
-.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(36px, 8vw, 60px); line-height: 1; margin: 0; letter-spacing: -.025em; text-wrap: balance; }
-.lede { margin: 0; color: var(--muted); max-width: 56ch; font-size: 16px; }
-.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-.search { flex: 1 1 260px; min-width: 0; position: relative; }
-.search svg { position: absolute; left: 12px; top: 50%; translate: 0 -50%; width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+header { text-align: center; display: flex; flex-direction: column; gap: 4px; padding-top: 8px; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 7vw, 44px); line-height: 1.05; margin: 0; letter-spacing: -.02em; }
+.sub { margin: 0; color: var(--muted); font-size: 14px; }
+.search {
+  position: relative; display: flex; align-items: center;
+  background: var(--pill); border: 1px solid var(--pill-line); border-radius: 999px;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+.search svg { position: absolute; left: 18px; width: 20px; height: 20px; color: var(--muted); pointer-events: none; }
 .search input {
-  width: 100%; font: inherit; color: var(--fg); background: var(--surface);
-  border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px 11px 38px;
+  width: 100%; min-width: 0; font: inherit; font-size: 16px; color: var(--fg); background: transparent;
+  border: 0; border-radius: 999px; padding: 14px 18px 14px 50px;
 }
 .search input::placeholder { color: var(--muted); }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.tools { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .chip {
-  font: inherit; font-size: 13px; color: var(--fg); background: transparent; cursor: pointer;
-  border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; min-height: 38px;
+  font: inherit; font-size: 13px; color: var(--fg); cursor: pointer; min-height: 38px; padding: 7px 14px;
+  background: var(--pill); border: 1px solid var(--pill-line); border-radius: 999px;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
 }
-.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--wall-a); border-color: var(--fg); }
 a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); grid-auto-flow: dense; }
-.tile {
-  position: relative; min-width: 0; min-height: 190px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px;
-  display: flex; flex-direction: column; gap: 14px;
-  --ic: oklch(var(--ic-l) var(--ic-c) var(--hue));
-  --tint: oklch(var(--tint-l) var(--tint-c) var(--hue));
+.apps {
+  display: grid; gap: 26px 8px; justify-items: center; align-items: start;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
 }
-.tile.wide { grid-column: span 2; }
-@media (max-width: 560px) { .tile.wide { grid-column: auto; } }
-.tile-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.icon { width: 52px; height: 52px; border-radius: 16px; background: var(--tint); color: var(--ic); display: grid; place-items: center; flex: none; }
-.icon svg { width: 28px; height: 28px; }
-.tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 4px; }
-.tile h3 { font-family: var(--font-display); font-size: 21px; line-height: 1.15; margin: 0; letter-spacing: -.01em; overflow-wrap: anywhere; }
-.tile p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-.tile-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.go { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; font-size: 14px; color: var(--ic); text-decoration: none; }
-.go::after { content: ""; position: absolute; inset: 0; border-radius: 20px; } /* tüm karo tıklanır */
-.go svg { width: 16px; height: 16px; }
-.side { position: relative; z-index: 1; display: flex; gap: 6px; }
-.mini {
-  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: 10px;
-  border: 1px solid var(--line); color: var(--muted); font-size: 13px; text-decoration: none; background: var(--surface);
+.app {
+  --c1: oklch(var(--ic-l1) var(--ic-c) var(--hue));
+  --c2: oklch(var(--ic-l2) var(--ic-c) calc(var(--hue) + 18));
+  width: 100%; max-width: 112px; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  text-decoration: none; color: var(--fg); -webkit-tap-highlight-color: transparent;
 }
-.mini:hover { color: var(--fg); border-color: var(--fg); }
-.mini svg { width: 16px; height: 16px; }
-.tile:hover { border-color: color-mix(in oklab, var(--ic) 55%, var(--line)); }
-.empty { color: var(--muted); padding: 24px 0; grid-column: 1 / -1; }
-footer { border-top: 1px solid var(--line); padding-top: 16px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; }
+.glyph {
+  position: relative; width: 68px; height: 68px; border-radius: 24px; display: grid; place-items: center; color: #fff;
+  background: linear-gradient(150deg, var(--c1), var(--c2));
+  box-shadow: 0 8px 18px -6px color-mix(in oklab, var(--c2) 70%, transparent), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.glyph svg { width: 34px; height: 34px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.18)); }
+.badge {
+  position: absolute; right: -5px; bottom: -5px; width: 24px; height: 24px; border-radius: 50%;
+  display: none; place-items: center; background: var(--fg); color: var(--wall-a); border: 2px solid var(--wall-a);
+}
+.badge svg { width: 13px; height: 13px; filter: none; }
+.code-mode .badge { display: grid; }
+.label { font-size: 13px; font-weight: 500; text-align: center; line-height: 1.2; max-width: 100%; overflow-wrap: anywhere; text-wrap: balance; }
+.app:hover .glyph { filter: brightness(1.06); }
+.empty { color: var(--muted); text-align: center; padding: 20px 0; grid-column: 1 / -1; }
+footer { text-align: center; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+@media (min-width: 640px) {
+  .apps { grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: 34px 12px; }
+  .glyph { width: 76px; height: 76px; border-radius: 27px; }
+  .glyph svg { width: 38px; height: 38px; }
+  .app { max-width: 128px; }
+}
 @media (prefers-reduced-motion: no-preference) {
-  .tile { transition: transform .18s ease, border-color .18s ease; }
-  .tile:hover { transform: translateY(-3px); }
-  .chip, .mini { transition: border-color .15s; }
+  .glyph { transition: transform .16s ease, filter .16s ease; }
+  .app:hover .glyph { transform: translateY(-3px) scale(1.04); }
+  .app:active .glyph { transform: scale(.94); }
 }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Mehmet Karadeniz</div>
     <h1>Genel Arayüz</h1>
-    <p class="lede">Okul sistemleri, ders içerikleri ve kişisel uygulamalar. Birine dokun, açılsın.</p>
+    <p class="sub" id="sub">Bir simgeye dokun, uygulama açılsın.</p>
   </header>
 
-  <div class="bar">
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input id="q" type="search" placeholder="Proje ara" aria-label="Proje ara" autocomplete="off">
-    </div>
-    <div class="chips" role="group" aria-label="Kategoriye göre filtrele">
-      <button class="chip" type="button" data-f="all" aria-pressed="true">Tümü</button>
-      <button class="chip" type="button" data-f="Okul" aria-pressed="false">Okul</button>
-      <button class="chip" type="button" data-f="Ders" aria-pressed="false">Ders</button>
-      <button class="chip" type="button" data-f="Kişisel" aria-pressed="false">Kişisel</button>
-    </div>
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Uygulama ara" aria-label="Uygulama ara" autocomplete="off">
   </div>
 
-  <main id="out" class="grid"></main>
+  <div class="tools" role="group" aria-label="Filtre">
+    <button class="chip" type="button" data-f="all" aria-pressed="true">Tümü</button>
+    <button class="chip" type="button" data-f="Okul" aria-pressed="false">Okul</button>
+    <button class="chip" type="button" data-f="Ders" aria-pressed="false">Ders</button>
+    <button class="chip" type="button" data-f="Kişisel" aria-pressed="false">Kişisel</button>
+    <button class="chip" type="button" id="codeBtn" aria-pressed="false">Kaynak kodu</button>
+  </div>
+
+  <main id="out" class="apps"></main>
 
   <footer>
     <span>github.com/karadenizmehmet-debug</span>
@@ -147,6 +154,7 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; font-family: var(
 
   var ICONS = {
     pano: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M7 9h5M7 12h8"/>',
+    panel: '<rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/>',
     zil: '<path d="M6 9a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7Z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
     bayrak: '<path d="M5 21V4"/><path d="M5 5h12l-2.5 4L17 13H5"/>',
     takip: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="m9 13 2 2 4-4"/>',
@@ -155,68 +163,46 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; font-family: var(
     nefes: '<path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>',
     aile: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2A5 5 0 0 1 21 19"/>'
   };
-  var ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-  var CODE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 8-4 4 4 4M16 8l4 4-4 4"/></svg>';
-  var PANEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  function svg(inner, w) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.8) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>'; }
+  var CODE = svg('<path d="m8 8-4 4 4 4M16 8l4 4-4 4"/>', 2.4);
 
   var items = [
-    { name: "Dijital Pano", cat: "Okul", hue: 235, icon: "pano", wide: true,
-      desc: "Okul panosu. Duyurular, özel günler, temalar ve modüller; yönetim paneli girişle açılır.",
-      open: U + "digitalpano/", repo: "digitalpano", extra: { label: "Panel", href: U + "digitalpano/#/panel", icon: PANEL } },
-    { name: "oZil Kumanda", cat: "Okul", hue: 55, icon: "zil",
-      desc: "Okul zilini telefondan yönet. Google hesabıyla girilir.",
-      open: U + "Ozil/kumanda.html", repo: "Ozil" },
-    { name: "İstiklal Marşı", cat: "Okul", hue: 25, icon: "bayrak",
-      desc: "Marşı okullarda uzaktan çalan web paneli.",
-      open: U + "Zilfar/", repo: "Zilfar" },
-    { name: "Yegitek Takip", cat: "Okul", hue: 195, icon: "takip",
-      desc: "Okullar, yapılanlar, yapılacaklar ve tahtalar tek listede.",
-      open: U + "Yegitek/", repo: "Yegitek" },
-    { name: "Ders Rotası 6", cat: "Ders", hue: 150, icon: "kitap", wide: true,
-      desc: "6. sınıf konu anlatımı, kara tahta PDF'i ve yedi alıştırma istasyonu. Fen, Matematik ve Peygamberimizin Hayatı hazır.",
-      open: U + "Emiko-okul/", repo: "Emiko-okul" },
-    { name: "BTY Ders", cat: "Ders", hue: 290, icon: "kod",
-      desc: "Bilişim ve Yapay Zekâ yazılılarına hazırlık: özet, sözlük, ipuçlu sorular.",
-      open: U + "Bty-ders/", repo: "Bty-ders" },
-    { name: "Nefes", cat: "Kişisel", hue: 175, icon: "nefes",
-      desc: "Sigara bırakma takibi, kriz anı egzersizleri ve sağlık dönüm noktaları.",
-      open: U + "Quitcigaret/", repo: "Quitcigaret" },
-    { name: "Aile Takip Paneli", cat: "Kişisel", hue: 5, icon: "aile",
-      desc: "Sağlık, su takibi, alışveriş listesi ve ortak aile notları.",
-      open: U + "takip/takip.html", repo: "takip" }
+    { name: "Dijital Pano", cat: "Okul", hue: 235, icon: "pano", open: U + "digitalpano/", repo: "digitalpano", tip: "Okul panosu" },
+    { name: "Pano Paneli", cat: "Okul", hue: 262, icon: "panel", open: U + "digitalpano/#/panel", repo: "digitalpano", tip: "Pano yönetim paneli (giriş ister)" },
+    { name: "oZil Kumanda", cat: "Okul", hue: 60, icon: "zil", open: U + "Ozil/kumanda.html", repo: "Ozil", tip: "Okul zili uzaktan kumanda" },
+    { name: "İstiklal Marşı", cat: "Okul", hue: 25, icon: "bayrak", open: U + "Zilfar/", repo: "Zilfar", tip: "Marşı uzaktan çalan panel" },
+    { name: "Yegitek Takip", cat: "Okul", hue: 195, icon: "takip", open: U + "Yegitek/", repo: "Yegitek", tip: "Okul sorumlusu takip uygulaması" },
+    { name: "Ders Rotası 6", cat: "Ders", hue: 150, icon: "kitap", open: U + "Emiko-okul/", repo: "Emiko-okul", tip: "6. sınıf konu anlatımı ve istasyonlar" },
+    { name: "BTY Ders", cat: "Ders", hue: 295, icon: "kod", open: U + "Bty-ders/", repo: "Bty-ders", tip: "Bilişim ve Yapay Zekâ yazılı hazırlık" },
+    { name: "Nefes", cat: "Kişisel", hue: 178, icon: "nefes", open: U + "Quitcigaret/", repo: "Quitcigaret", tip: "Sigara bırakma takibi" },
+    { name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)" }
   ];
 
   var out = document.getElementById("out");
   var q = document.getElementById("q");
-  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
-  var filter = "all";
-  try { var s = localStorage.getItem("genel-arayuz-kategori"); if (s && ["Okul", "Ders", "Kişisel"].indexOf(s) !== -1) filter = s; } catch (e) {}
+  var sub = document.getElementById("sub");
+  var codeBtn = document.getElementById("codeBtn");
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip[data-f]"));
+  var filter = "all", codeMode = false;
+  try {
+    var s = localStorage.getItem("genel-arayuz-kategori");
+    if (s && ["Okul", "Ders", "Kişisel"].indexOf(s) !== -1) filter = s;
+    codeMode = localStorage.getItem("genel-arayuz-kod") === "1";
+  } catch (e) {}
 
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; }
-  function svg(inner) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>'; }
-  function a(href, cls, html, label) {
-    var n = el("a", cls); n.href = href; n.target = "_blank"; n.rel = "noopener noreferrer";
-    n.innerHTML = html; if (label) n.setAttribute("aria-label", label); return n;
-  }
-  function tile(p) {
-    var t = el("article", "tile" + (p.wide ? " wide" : ""));
-    t.style.setProperty("--hue", p.hue);
-    var top = el("div", "tile-top");
-    var ic = el("div", "icon"); ic.innerHTML = svg(ICONS[p.icon]);
-    top.appendChild(ic); top.appendChild(el("span", "tag", p.cat));
-    t.appendChild(top);
-    var body = el("div");
-    body.appendChild(el("h3", "", p.name));
-    body.appendChild(el("p", "", p.desc));
-    t.appendChild(body);
-    var foot = el("div", "tile-foot");
-    foot.appendChild(a(p.open, "go", "<span>Aç</span>" + ARROW, p.name + " uygulamasını aç"));
-    var side = el("div", "side");
-    if (p.extra) side.appendChild(a(p.extra.href, "mini", p.extra.icon + "<span>" + p.extra.label + "</span>"));
-    side.appendChild(a(G + p.repo, "mini", CODE, p.name + " kaynak kodu"));
-    foot.appendChild(side);
-    t.appendChild(foot);
-    return t;
+  function app(p) {
+    var a = el("a", "app");
+    a.href = codeMode ? G + p.repo : p.open;
+    a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.title = p.tip + (codeMode ? " (kaynak kodu)" : "");
+    a.style.setProperty("--hue", p.hue);
+    var g = el("span", "glyph");
+    g.innerHTML = svg(ICONS[p.icon]);
+    var b = el("span", "badge"); b.innerHTML = CODE; g.appendChild(b);
+    a.appendChild(g);
+    a.appendChild(el("span", "label", p.name));
+    return a;
   }
   function render() {
     var term = q.value.trim().toLowerCase();
@@ -224,11 +210,14 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; font-family: var(
     var n = 0;
     items.forEach(function (p) {
       if (filter !== "all" && p.cat !== filter) return;
-      if (term && (p.name + " " + p.desc + " " + p.cat).toLowerCase().indexOf(term) === -1) return;
-      out.appendChild(tile(p)); n++;
+      if (term && (p.name + " " + p.tip + " " + p.cat).toLowerCase().indexOf(term) === -1) return;
+      out.appendChild(app(p)); n++;
     });
-    if (!n) out.appendChild(el("p", "empty", "Eşleşen proje yok. Aramayı kısaltın veya Tümü'nü seçin."));
+    if (!n) out.appendChild(el("p", "empty", "Eşleşen uygulama yok."));
     chips.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-f") === filter)); });
+    codeBtn.setAttribute("aria-pressed", String(codeMode));
+    out.classList.toggle("code-mode", codeMode);
+    sub.textContent = codeMode ? "Kaynak kodu açık: simgeler GitHub'a gider." : "Bir simgeye dokun, uygulama açılsın.";
   }
   chips.forEach(function (b) {
     b.addEventListener("click", function () {
@@ -236,6 +225,11 @@ footer { border-top: 1px solid var(--line); padding-top: 16px; font-family: var(
       try { localStorage.setItem("genel-arayuz-kategori", filter); } catch (e) {}
       render();
     });
+  });
+  codeBtn.addEventListener("click", function () {
+    codeMode = !codeMode;
+    try { localStorage.setItem("genel-arayuz-kod", codeMode ? "1" : "0"); } catch (e) {}
+    render();
   });
   q.addEventListener("input", render);
   render();

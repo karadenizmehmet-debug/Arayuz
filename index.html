@@ -198,7 +198,12 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .chip[data-f="fav"][aria-pressed="true"] svg { fill: #f5b301; stroke: #f5b301; }
 .app:hover .glyph { filter: brightness(1.06); }
 .empty { color: var(--muted); text-align: center; padding: 20px 0; grid-column: 1 / -1; }
-footer { text-align: center; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+footer { margin-top: 4px; padding-top: 14px; border-top: 1px solid var(--pill-line); display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); text-align: center; }
+.f-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; }
+.f-row > * + *::before { content: ""; display: inline-block; width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: .5; margin-right: 12px; vertical-align: middle; }
+.f-link { display: inline-flex; align-items: center; gap: 6px; color: var(--fg); font-weight: 500; text-decoration: none; }
+.f-link:hover { text-decoration: underline; }
+.f-link svg { width: 14px; height: 14px; }
 @media (prefers-reduced-motion: no-preference) {
   .glyph { transition: transform .16s ease, filter .16s ease; }
   .app:hover .glyph { transform: translateY(-3px) scale(1.04); }
@@ -275,9 +280,13 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   </section>
 
   <footer>
-    <span>github.com/karadenizmehmet-debug</span>
-    <span>© Mehmet Karadeniz, 2026-2027</span>
-    <span>Tüm hakları saklıdır.</span>
+    <div class="f-row">
+      <a class="f-link" href="https://github.com/karadenizmehmet-debug" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>karadenizmehmet-debug</a>
+      <span id="fver"></span>
+    </div>
+    <div class="f-row">
+      <span>© Mehmet Karadeniz, 2026-2027. Tüm hakları saklıdır.</span>
+    </div>
   </footer>
 </div>
 
@@ -329,9 +338,10 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.7"; // her değişiklikte artır: 2.7, 2.8 ...
+  var VERSION = "2.8"; // her değişiklikte artır: 2.8, 2.9 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
+  document.getElementById("fver").textContent = "Sürüm " + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";
   var G = "https://github.com/karadenizmehmet-debug/";
 

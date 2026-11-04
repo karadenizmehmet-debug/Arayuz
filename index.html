@@ -155,7 +155,6 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
   overflow-wrap: anywhere; text-wrap: balance;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.st { margin-top: -4px; font-size: 11px; font-weight: 600; color: var(--muted); }
 .app.bakimda { opacity: .55; }
 .app:not([href]) { cursor: default; }
 
@@ -296,7 +295,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.4"; // her değişiklikte artır: 2.4, 2.5 ...
+  var VERSION = "2.5"; // her değişiklikte artır: 2.5, 2.6 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";
@@ -335,7 +334,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     { id: "bty", name: "BTY Ders", cat: "Ders", hue: 295, icon: "kod", open: U + "Bty-ders/", repo: "Bty-ders", tip: "Bilişim ve Yapay Zekâ yazılı hazırlık", status: "aktif" },
     { id: "nefes", name: "Nefes", cat: "Kişisel", hue: 178, icon: "nefes", open: U + "Quitcigaret/", repo: "Quitcigaret", tip: "Sigara bırakma takibi", status: "aktif" },
     { id: "aile", name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)", status: "aktif" },
-    { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "deneme", since: "2026-11-04" }
+    { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "aktif", since: "2026-11-04" }
   ];
   var STATUS = { aktif: "Aktif", deneme: "Deneme", bakimda: "Bakımda" };
 
@@ -398,7 +397,6 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     if (p.repo) { var b = el("span", "badge"); b.innerHTML = CODE; g.appendChild(b); }
     a.appendChild(g);
     a.appendChild(el("span", "label", p.name));
-    if (p.status !== "aktif") a.appendChild(el("span", "st", STATUS[p.status]));
     a.addEventListener("click", function (e) {
       if (editMode) { e.preventDefault(); toggleFav(p.id); return; }
       if (a.hasAttribute("aria-disabled")) { e.preventDefault(); return; }

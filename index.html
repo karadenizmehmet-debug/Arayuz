@@ -96,16 +96,16 @@ h1 {
 .ibtn svg { width: 18px; height: 18px; }
 
 .hello {
-  display: flex; flex-direction: column; align-items: center; gap: 1px; text-align: center;
-  padding: 14px 16px; background: var(--pill); border: 1px solid var(--pill-line); border-radius: 26px;
+  display: flex; flex-direction: column; align-items: center; gap: 0; text-align: center;
+  padding: 10px 14px; background: var(--pill); border: 1px solid var(--pill-line); border-radius: 22px;
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
 }
-.hello-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(20px, 5vw, 26px); letter-spacing: -.01em; line-height: 1.15; }
-.clock { font-family: var(--font-display); font-weight: 700; font-size: clamp(36px, 10vw, 52px); line-height: 1.05; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.date { color: var(--muted); font-size: 13.5px; }
-.weather { margin-top: 4px; display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 500; min-height: 24px; }
-.weather svg { width: 24px; height: 24px; color: var(--accent); flex: none; }
-.weather .w-meta { color: var(--muted); font-weight: 400; font-size: 13px; }
+.hello-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(17px, 4.2vw, 22px); letter-spacing: -.01em; line-height: 1.15; }
+.clock { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 8.5vw, 44px); line-height: 1.05; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.date { color: var(--muted); font-size: 12.5px; }
+.weather { margin-top: 3px; display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 500; min-height: 22px; }
+.weather svg { width: 22px; height: 22px; color: var(--accent); flex: none; }
+.weather .w-meta { color: var(--muted); font-weight: 400; font-size: 12.5px; }
 
 .search {
   position: relative; display: flex; align-items: center;
@@ -129,7 +129,6 @@ h1 {
 a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .sec-h { margin: 0 0 12px; font-size: 13px; font-weight: 600; letter-spacing: .02em; color: var(--muted); }
-.hint { margin: -4px 0 12px; font-size: 12.5px; color: var(--accent); }
 
 /* Tüm simgeler aynı boyutta: 64px kutu, 32px çizim. */
 .apps {
@@ -155,7 +154,9 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
   overflow-wrap: anywhere; text-wrap: balance;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.app.bakimda { opacity: .55; }
+.app { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.app.off { opacity: .55; }
+.app.st-pasif { opacity: .45; filter: grayscale(.8); }
 .app:not([href]) { cursor: default; }
 
 .badge {
@@ -165,29 +166,29 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
 .badge svg { width: 12px; height: 12px; filter: none; }
 .code-mode .badge { display: grid; }
 .dot { position: absolute; right: -3px; top: -3px; width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--wall-a); background: #2fa36b; }
-.dot.deneme { background: #3b82f6; }
-.dot.bakimda { background: #e0a100; }
+.dot.bakimda { background: #f0b400; }
+.dot.erisilemiyor { background: #e5484d; }
+.dot.pasif { background: #8b98a5; }
 .new {
   position: absolute; left: -6px; top: -6px; padding: 1px 6px; border-radius: 999px;
   font-size: 10px; font-weight: 700; line-height: 1.5; color: #fff; background: #e5484d; border: 2px solid var(--wall-a);
 }
 .star {
-  position: absolute; left: -6px; top: -6px; width: 24px; height: 24px; border-radius: 50%; display: none; place-items: center;
-  background: var(--fg); color: var(--wall-a); border: 2px solid var(--wall-a);
+  position: absolute; left: -5px; bottom: -5px; width: 22px; height: 22px; border-radius: 50%; display: none; place-items: center;
+  background: #f5b301; color: #5a3d00; border: 2px solid var(--wall-a);
 }
-.star svg { width: 13px; height: 13px; filter: none; }
-.app.fav .star { background: #f5b301; color: #5a3d00; }
-.app.fav .star svg { fill: currentColor; }
-.edit-mode .star { display: grid; }
-.edit-mode .new { display: none; }
-.edit-mode .app { cursor: pointer; }
+.star svg { width: 12px; height: 12px; fill: currentColor; filter: none; }
+.app.fav .star { display: grid; }
+.chip[data-f="fav"] { min-width: 38px; padding-inline: 11px; }
+.chip[data-f="fav"] svg { margin: 0; width: 16px; height: 16px; }
+.chip[data-f="fav"][aria-pressed="true"] svg { fill: #f5b301; stroke: #f5b301; }
 .app:hover .glyph { filter: brightness(1.06); }
 .empty { color: var(--muted); text-align: center; padding: 20px 0; grid-column: 1 / -1; }
 footer { text-align: center; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
 @media (prefers-reduced-motion: no-preference) {
   .glyph { transition: transform .16s ease, filter .16s ease; }
   .app:hover .glyph { transform: translateY(-3px) scale(1.04); }
-  .app:active .glyph { transform: scale(.94); }
+  .app:active .glyph { transform: scale(.9); }
 }
 
 /* Ayarlar penceresi */
@@ -203,6 +204,16 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 .row .seg { display: flex; gap: 6px; flex-wrap: wrap; }
 .row .seg .chip { flex: 1; }
 .note { margin: 0; font-size: 12.5px; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+.toast {
+  position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom, 0px)); z-index: 20; max-width: min(90vw, 360px);
+  display: flex; flex-direction: column; gap: 2px; padding: 10px 16px; border-radius: 16px; font-size: 13px; line-height: 1.3; text-align: center;
+  color: var(--wall-a); background: var(--fg); box-shadow: 0 8px 24px -6px rgba(0,0,0,.4);
+  opacity: 0; visibility: hidden; transform: translate(-50%, 8px); transition: opacity .2s, transform .2s, visibility .2s; pointer-events: none;
+}
+.toast.on { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.toast span { opacity: .8; font-size: 12px; }
 </style>
 </head>
 <body>
@@ -236,7 +247,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     <button class="chip" type="button" data-f="Okul" aria-pressed="false">Okul</button>
     <button class="chip" type="button" data-f="Ders" aria-pressed="false">Ders</button>
     <button class="chip" type="button" data-f="Kişisel" aria-pressed="false">Kişisel</button>
-    <button class="chip" type="button" id="editBtn" aria-pressed="false"></button>
+    <button class="chip" type="button" data-f="fav" aria-pressed="false" aria-label="Favoriler" title="Favoriler"></button>
   </div>
 
   <section id="secRecent" hidden>
@@ -244,14 +255,8 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     <div class="apps" id="outRecent"></div>
   </section>
 
-  <section id="secFav" hidden>
-    <h2 class="sec-h">Favoriler</h2>
-    <div class="apps" id="outFav"></div>
-  </section>
-
   <section>
-    <h2 class="sec-h">Tüm uygulamalar</h2>
-    <p class="hint" id="editHint" hidden>Favoriye eklemek ya da çıkarmak için uygulamaya dokun.</p>
+    <h2 class="sec-h" id="allH">Tüm uygulamalar</h2>
     <main id="out" class="apps"></main>
   </section>
 
@@ -285,6 +290,16 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     <p class="note" id="installNote">Tarayıcı menüsünden «Ana ekrana ekle» seç.</p>
   </div>
   <div class="row">
+    <span>Durum renkleri</span>
+    <div class="legend">
+      <span><i style="background:#2fa36b"></i>Aktif</span>
+      <span><i style="background:#f0b400"></i>Bakımda</span>
+      <span><i style="background:#e5484d"></i>Erişilemiyor</span>
+      <span><i style="background:#8b98a5"></i>Pasif</span>
+    </div>
+    <p class="note">Uygulamaya uzun basarak favoriye ekle ya da çıkar.</p>
+  </div>
+  <div class="row">
     <span>Geçmiş</span>
     <div class="seg">
       <button class="chip" type="button" id="clearRecent">Son kullanılanları temizle</button>
@@ -292,10 +307,11 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     </div>
   </div>
 </dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function () {
-  var VERSION = "2.5"; // her değişiklikte artır: 2.5, 2.6 ...
+  var VERSION = "2.6"; // her değişiklikte artır: 2.6, 2.7 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";
@@ -322,7 +338,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   function svg(inner, w) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.8) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>'; }
   var CODE = svg('<path d="m8 8-4 4 4 4M16 8l4 4-4 4"/>', 2.4);
 
-  // status: aktif | deneme | bakimda. since: eklenme tarihi (14 gün "Yeni" etiketi çıkar, açılınca kalkar).
+  // status: aktif | bakimda | erisilemiyor | pasif. since: eklenme tarihi (14 gün "Yeni" etiketi çıkar, açılınca kalkar).
   var items = [
     { id: "pano", name: "Dijital Pano", cat: "Okul", hue: 235, icon: "pano", open: U + "digitalpano/", repo: "digitalpano", tip: "Okul panosu", status: "aktif" },
     { id: "panel", name: "Pano Paneli", cat: "Okul", hue: 262, icon: "panel", open: U + "digitalpano/#/panel", repo: "digitalpano", tip: "Pano yönetim paneli (giriş ister)", status: "aktif" },
@@ -336,19 +352,19 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     { id: "aile", name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)", status: "aktif" },
     { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "aktif", since: "2026-11-04" }
   ];
-  var STATUS = { aktif: "Aktif", deneme: "Deneme", bakimda: "Bakımda" };
+  var STATUS = { aktif: "Aktif", bakimda: "Bakımda", erisilemiyor: "Erişilemiyor", pasif: "Pasif" };
+  var HEADINGS = { all: "Tüm uygulamalar", "Okul": "Okul uygulamaları", "Ders": "Ders uygulamaları", "Kişisel": "Kişisel uygulamalar", fav: "Favori uygulamalar" };
 
   var out = document.getElementById("out");
   var outRecent = document.getElementById("outRecent");
-  var outFav = document.getElementById("outFav");
   var secRecent = document.getElementById("secRecent");
-  var secFav = document.getElementById("secFav");
-  var editHint = document.getElementById("editHint");
+  var allH = document.getElementById("allH");
+  var toastEl = document.getElementById("toast");
   var q = document.getElementById("q");
   var codeBtn = document.getElementById("codeBtn");
-  var editBtn = document.getElementById("editBtn");
   var chips = Array.prototype.slice.call(document.querySelectorAll(".chip[data-f]"));
-  var filter = "all", codeMode = false, editMode = false;
+  var filter = "all", codeMode = false, lpUntil = 0;
+  document.querySelector('.chip[data-f="fav"]').innerHTML = svg(ICONS.star, 2);
 
   function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -357,7 +373,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   var opened = load("genel-arayuz-acilan", []);
   try {
     var s = localStorage.getItem("genel-arayuz-kategori");
-    if (s && ["Okul", "Ders", "Kişisel"].indexOf(s) !== -1) filter = s;
+    if (s && ["Okul", "Ders", "Kişisel", "fav"].indexOf(s) !== -1) filter = s;
     codeMode = localStorage.getItem("genel-arayuz-kod") === "1";
   } catch (e) {}
 
@@ -370,23 +386,36 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     save("genel-arayuz-son", recent); save("genel-arayuz-acilan", opened);
   }
   function toggleFav(id) {
-    var i = favs.indexOf(id);
-    if (i === -1) favs.push(id); else favs.splice(i, 1);
+    var i = favs.indexOf(id), added = i === -1;
+    if (added) favs.push(id); else favs.splice(i, 1);
     save("genel-arayuz-fav", favs);
     render();
+    return added;
+  }
+  var toastTimer = null;
+  function toast(title, body) {
+    toastEl.textContent = "";
+    toastEl.appendChild(el("strong", "", title));
+    if (body) toastEl.appendChild(el("span", "", body));
+    toastEl.classList.add("on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("on"); }, 2600);
+  }
+  function favToast(p, added) {
+    toast((added ? "★ Favorilere eklendi: " : "Favorilerden çıkarıldı: ") + p.name, p.tip + " · " + STATUS[p.status]);
   }
 
   function app(p) {
-    var down = p.status === "bakimda";
+    var on = p.status === "aktif";
     var showCode = codeMode && !!p.repo; // deposu olmayan (dış site) simge her zaman sitesini açar
-    var a = el("a", "app" + (down ? " bakimda" : "") + (favs.indexOf(p.id) !== -1 ? " fav" : ""));
-    if (!down || showCode) {
+    var a = el("a", "app" + (on ? "" : " off st-" + p.status) + (favs.indexOf(p.id) !== -1 ? " fav" : ""));
+    if (on || showCode) {
       a.href = showCode ? G + p.repo : p.open;
       a.target = "_blank"; a.rel = "noopener noreferrer";
     } else {
-      a.setAttribute("aria-disabled", "true");
+      a.setAttribute("aria-disabled", "true"); a.tabIndex = 0;
     }
-    a.title = p.tip + " · " + STATUS[p.status] + (showCode ? " (kaynak kodu)" : "");
+    a.title = p.tip + " · " + STATUS[p.status] + (showCode ? " (kaynak kodu)" : "") + " · Uzun bas: favori";
     a.style.setProperty("--hue", p.hue);
     var g = el("span", "glyph");
     g.innerHTML = svg(ICONS[p.icon]);
@@ -397,9 +426,26 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     if (p.repo) { var b = el("span", "badge"); b.innerHTML = CODE; g.appendChild(b); }
     a.appendChild(g);
     a.appendChild(el("span", "label", p.name));
+
+    // Uzun basma (0,5 sn): favori aç/kapa + açıklama. Kaydırma ya da parmak oynarsa iptal.
+    var timer = null, sx = 0, sy = 0;
+    function cancel() { if (timer) { clearTimeout(timer); timer = null; } }
+    a.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      cancel(); sx = e.clientX; sy = e.clientY;
+      timer = setTimeout(function () {
+        timer = null; lpUntil = Date.now() + 900; // ardından gelen tıklama sayfayı açmasın
+        if (navigator.vibrate) { try { navigator.vibrate(18); } catch (err) {} }
+        favToast(p, toggleFav(p.id));
+      }, 500);
+    });
+    a.addEventListener("pointermove", function (e) { if (timer && Math.abs(e.clientX - sx) + Math.abs(e.clientY - sy) > 10) cancel(); });
+    ["pointerup", "pointercancel", "pointerleave"].forEach(function (ev) { a.addEventListener(ev, cancel); });
+    a.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+    a.addEventListener("keydown", function (e) { if (e.key === "f" || e.key === "F") favToast(p, toggleFav(p.id)); });
     a.addEventListener("click", function (e) {
-      if (editMode) { e.preventDefault(); toggleFav(p.id); return; }
-      if (a.hasAttribute("aria-disabled")) { e.preventDefault(); return; }
+      if (Date.now() < lpUntil) { e.preventDefault(); return; }
+      if (!on && !showCode) { e.preventDefault(); toast(p.name + " · " + STATUS[p.status], p.tip); return; }
       touch(p.id); // liste, sayfa tekrar görününce yenilenir (yeni sekme açılırken DOM'a dokunma)
     });
     return a;
@@ -410,23 +456,19 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     var term = q.value.trim().toLocaleLowerCase("tr");
     var home = filter === "all" && !term;
     var recents = recent.map(byId).filter(Boolean);
-    var favItems = favs.map(byId).filter(Boolean);
     fill(outRecent, recents); secRecent.hidden = !(home && recents.length);
-    fill(outFav, favItems); secFav.hidden = !(home && favItems.length);
     var list = items.filter(function (p) {
-      if (filter !== "all" && p.cat !== filter) return false;
-      if (term && (p.name + " " + p.tip + " " + p.cat + " " + STATUS[p.status]).toLocaleLowerCase("tr").indexOf(term) === -1) return false;
-      return !(home && favs.indexOf(p.id) !== -1); // favoriler üstte sabit, aşağıda tekrarlanmaz
+      if (filter === "fav") { if (favs.indexOf(p.id) === -1) return false; }
+      else if (filter !== "all" && p.cat !== filter) return false;
+      return !term || (p.name + " " + p.tip + " " + p.cat + " " + STATUS[p.status]).toLocaleLowerCase("tr").indexOf(term) !== -1;
     });
+    list.sort(function (a, b) { return Number(favs.indexOf(b.id) !== -1) - Number(favs.indexOf(a.id) !== -1); }); // favoriler üstte sabit
     fill(out, list);
-    if (!list.length && !(home && favItems.length)) out.appendChild(el("p", "empty", "Eşleşen uygulama yok."));
+    allH.textContent = (term ? "Arama sonuçları" : HEADINGS[filter]) + " · " + list.length;
+    if (!list.length) out.appendChild(el("p", "empty", filter === "fav" && !term ? "Henüz favori yok. Bir uygulamaya uzun basıp favoriye ekle." : "Eşleşen uygulama yok."));
     chips.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-f") === filter)); });
     codeBtn.setAttribute("aria-pressed", String(codeMode));
-    editBtn.setAttribute("aria-pressed", String(editMode));
-    editBtn.innerHTML = svg(ICONS.star, 2) + (editMode ? "Bitti" : "Favori seç");
-    editHint.hidden = !editMode;
     document.body.classList.toggle("code-mode", codeMode);
-    document.body.classList.toggle("edit-mode", editMode);
   }
   chips.forEach(function (b) {
     b.addEventListener("click", function () {
@@ -435,7 +477,6 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
       render();
     });
   });
-  editBtn.addEventListener("click", function () { editMode = !editMode; render(); });
   codeBtn.addEventListener("click", function () {
     codeMode = !codeMode;
     try { localStorage.setItem("genel-arayuz-kod", codeMode ? "1" : "0"); } catch (e) {}

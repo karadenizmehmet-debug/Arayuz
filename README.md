@@ -7,4 +7,6 @@ Okul sistemleri, ders içerikleri ve kişisel uygulamalara tek yerden giriş say
 - Sürüm: `index.html` içindeki `VERSION` değeri başlığın yanında görünür; her değişiklikte artır
 - Yayın: GitHub Pages, `main` dalı, kök klasör
 
-Mehmet Karadeniz, 2026-2027
+## Lisans
+
+© Mehmet Karadeniz, 2026-2027. Tüm hakları saklıdır. Ayrıntı için [LICENSE](LICENSE) dosyasına bak.

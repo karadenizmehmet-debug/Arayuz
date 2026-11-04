@@ -158,7 +158,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
 
 <script>
 (function () {
-  var VERSION = "1.5"; // her değişiklikte artır: 1.6, 1.7 ...
+  var VERSION = "1.6"; // her değişiklikte artır: 1.7, 1.8 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";
@@ -173,7 +173,9 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
     kitap: '<path d="M3 5.5A1.5 1.5 0 0 1 4.5 4H11v15H4.5A1.5 1.5 0 0 0 3 20.5Z"/><path d="M21 5.5A1.5 1.5 0 0 0 19.5 4H13v15h6.5a1.5 1.5 0 0 1 1.5 1.5Z"/>',
     kod: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>',
     nefes: '<path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>',
-    aile: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2A5 5 0 0 1 21 19"/>'
+    aile: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2A5 5 0 0 1 21 19"/>',
+    resim: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5L7 20"/>',
+    mebbis: '<path d="M3 10 12 4l9 6"/><path d="M5 10v9M9.5 10v9M14.5 10v9M19 10v9M3 20h18"/>'
   };
   function svg(inner, w) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.8) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>'; }
   var CODE = svg('<path d="m8 8-4 4 4 4M16 8l4 4-4 4"/>', 2.4);
@@ -184,10 +186,12 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
     { name: "oZil Kumanda", cat: "Okul", hue: 60, icon: "zil", open: U + "Ozil/kumanda.html", repo: "Ozil", tip: "Okul zili uzaktan kumanda" },
     { name: "İstiklal Marşı", cat: "Okul", hue: 25, icon: "bayrak", open: U + "Zilfar/", repo: "Zilfar", tip: "Marşı uzaktan çalan panel" },
     { name: "Yegitek Takip", cat: "Okul", hue: 195, icon: "takip", open: U + "Yegitek/", repo: "Yegitek", tip: "Okul sorumlusu takip uygulaması" },
+    { name: "MEBBİS", cat: "Okul", hue: 215, icon: "mebbis", open: "https://mebbis.meb.gov.tr/", tip: "MEB bilgi sistemi (giriş ister)" },
     { name: "Ders Rotası 6", cat: "Ders", hue: 150, icon: "kitap", open: U + "Emiko-okul/", repo: "Emiko-okul", tip: "6. sınıf konu anlatımı ve istasyonlar" },
     { name: "BTY Ders", cat: "Ders", hue: 295, icon: "kod", open: U + "Bty-ders/", repo: "Bty-ders", tip: "Bilişim ve Yapay Zekâ yazılı hazırlık" },
     { name: "Nefes", cat: "Kişisel", hue: 178, icon: "nefes", open: U + "Quitcigaret/", repo: "Quitcigaret", tip: "Sigara bırakma takibi" },
-    { name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)" }
+    { name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)" },
+    { name: "Arkaplan Silici", cat: "Kişisel", hue: 330, icon: "resim", open: U + "Resim/", repo: "Resim", tip: "Fotoğrafların arka planını toplu siler" }
   ];
 
   var out = document.getElementById("out");
@@ -205,13 +209,14 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; }
   function app(p) {
     var a = el("a", "app");
-    a.href = codeMode ? G + p.repo : p.open;
+    var showCode = codeMode && !!p.repo; // deposu olmayan (dış site) simge her zaman sitesini açar
+    a.href = showCode ? G + p.repo : p.open;
     a.target = "_blank"; a.rel = "noopener noreferrer";
-    a.title = p.tip + (codeMode ? " (kaynak kodu)" : "");
+    a.title = p.tip + (showCode ? " (kaynak kodu)" : "");
     a.style.setProperty("--hue", p.hue);
     var g = el("span", "glyph");
     g.innerHTML = svg(ICONS[p.icon]);
-    var b = el("span", "badge"); b.innerHTML = CODE; g.appendChild(b);
+    if (p.repo) { var b = el("span", "badge"); b.innerHTML = CODE; g.appendChild(b); }
     a.appendChild(g);
     a.appendChild(el("span", "label", p.name));
     return a;

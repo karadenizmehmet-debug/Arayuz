@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="author" content="Mehmet Karadeniz, 2026-2027">
 <meta name="copyright" content="© Mehmet Karadeniz, 2026-2027. Tüm hakları saklıdır.">
-<meta name="theme-color" content="#0f1a22">
+<meta name="theme-color" content="#cfe4ee" id="themeColor">
 <title>Karadeniz Ekosistemi</title>
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=14">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=14">
@@ -15,8 +15,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<script>
+/* Tema yanıp sönmesin: kayıtlı tercihi ilk boyamadan önce uygula. */
+(function () { try { var t = localStorage.getItem("genel-arayuz-tema"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
 <style>
-/* Düzen: Android ana ekranı gibi. Üstte arama hapı, altında hayalet açıklamasız uygulama simgeleri (squircle + altında ad). */
+/* Düzen: üstte kompakt başlık (ekranın en fazla %20'si), altında karşılama kartı, arama, son kullanılanlar, favoriler ve tüm uygulamalar (squircle simge + altında ad). */
 :root {
   color-scheme: light;
   --wall-a: #cfe4ee; --wall-b: #e6dcf2;
@@ -24,7 +28,9 @@
   --muted: #4d6172;
   --pill: rgba(255,255,255,.72);
   --pill-line: rgba(19,32,42,.12);
+  --sheet: #ffffff;
   --accent: #0a6c8b;
+  --ic-shadow: rgba(19,32,42,.12);
   --ic-l1: 0.66; --ic-l2: 0.5; --ic-c: 0.16;
   --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
@@ -35,7 +41,9 @@
     --wall-a: #0c1a24; --wall-b: #1d1f3d;
     --fg: #e9f0f5; --muted: #a3b3c0;
     --pill: rgba(255,255,255,.09); --pill-line: rgba(255,255,255,.14);
+    --sheet: #16232e;
     --accent: #5cc3dd;
+    --ic-shadow: rgba(0,0,0,.32);
     --ic-l1: 0.7; --ic-l2: 0.52;
   }
 }
@@ -44,7 +52,9 @@
   --wall-a: #0c1a24; --wall-b: #1d1f3d;
   --fg: #e9f0f5; --muted: #a3b3c0;
   --pill: rgba(255,255,255,.09); --pill-line: rgba(255,255,255,.14);
+  --sheet: #16232e;
   --accent: #5cc3dd;
+  --ic-shadow: rgba(0,0,0,.32);
   --ic-l1: 0.7; --ic-l2: 0.52;
 }
 * { box-sizing: border-box; }
@@ -58,28 +68,45 @@ body {
   max-width: 760px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: max(28px, env(safe-area-inset-top, 0px)) max(28px, env(safe-area-inset-bottom, 0px));
-  display: flex; flex-direction: column; gap: 26px;
+  padding-block: max(14px, env(safe-area-inset-top, 0px)) max(28px, env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; gap: 18px;
 }
-header { text-align: center; display: flex; flex-direction: column; gap: 4px; padding-top: 8px; }
-h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 7vw, 44px); line-height: 1.05; margin: 0; letter-spacing: -.02em; }
+
+/* Başlık: sol logo, ortada ad + sürüm + tek satır açıklama, sağda tema ve ayarlar. */
+.top { display: flex; align-items: center; gap: 8px; max-height: 20vh; overflow: hidden; }
+.logo { width: 36px; height: 36px; border-radius: 11px; flex: none; box-shadow: 0 2px 6px var(--ic-shadow); }
+.ttl { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+h1 {
+  display: flex; flex-wrap: wrap; align-items: center; column-gap: 7px; margin: 0;
+  font-family: var(--font-display); font-weight: 700; font-size: clamp(14px, 3.9vw, 24px); line-height: 1.15; letter-spacing: -.01em;
+}
 .ver {
-  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 3px 9px;
-  font-family: var(--font-body); font-size: 12px; font-weight: 600; letter-spacing: .02em; line-height: 1.3;
+  padding: 2px 7px; font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: .02em; line-height: 1.3;
   color: var(--fg); background: var(--pill); border: 1px solid var(--pill-line); border-radius: 999px;
 }
-.sub { margin: 0; color: var(--muted); font-size: 14px; }
-.hello {
-  display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center;
-  padding: 18px 16px; background: var(--pill); border: 1px solid var(--pill-line); border-radius: 28px;
+.sub { margin: 0; color: var(--muted); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hbtns { display: flex; gap: 6px; flex: none; }
+.sheet-h .ibtn { width: 38px; height: 38px; }
+.ibtn {
+  width: 34px; height: 34px; display: grid; place-items: center; padding: 0; cursor: pointer;
+  color: var(--fg); background: var(--pill); border: 1px solid var(--pill-line); border-radius: 50%;
+  box-shadow: 0 2px 6px var(--ic-shadow);
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
 }
-.hello-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(22px, 5.5vw, 30px); letter-spacing: -.01em; line-height: 1.15; }
-.clock { font-family: var(--font-display); font-weight: 700; font-size: clamp(44px, 13vw, 64px); line-height: 1.05; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-.date { color: var(--muted); font-size: 14px; }
-.weather { margin-top: 6px; display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 500; min-height: 24px; }
+.ibtn svg { width: 18px; height: 18px; }
+
+.hello {
+  display: flex; flex-direction: column; align-items: center; gap: 1px; text-align: center;
+  padding: 14px 16px; background: var(--pill); border: 1px solid var(--pill-line); border-radius: 26px;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+.hello-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(20px, 5vw, 26px); letter-spacing: -.01em; line-height: 1.15; }
+.clock { font-family: var(--font-display); font-weight: 700; font-size: clamp(36px, 10vw, 52px); line-height: 1.05; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.date { color: var(--muted); font-size: 13.5px; }
+.weather { margin-top: 4px; display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 500; min-height: 24px; }
 .weather svg { width: 24px; height: 24px; color: var(--accent); flex: none; }
 .weather .w-meta { color: var(--muted); font-weight: 400; font-size: 13px; }
+
 .search {
   position: relative; display: flex; align-items: center;
   background: var(--pill); border: 1px solid var(--pill-line); border-radius: 999px;
@@ -88,7 +115,7 @@ h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 
 .search svg { position: absolute; left: 18px; width: 20px; height: 20px; color: var(--muted); pointer-events: none; }
 .search input {
   width: 100%; min-width: 0; font: inherit; font-size: 16px; color: var(--fg); background: transparent;
-  border: 0; border-radius: 999px; padding: 14px 18px 14px 50px;
+  border: 0; border-radius: 999px; padding: 13px 18px 13px 50px;
 }
 .search input::placeholder { color: var(--muted); }
 .tools { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
@@ -98,53 +125,99 @@ h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
 }
 .chip[aria-pressed="true"] { background: var(--fg); color: var(--wall-a); border-color: var(--fg); }
+.chip svg { width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; }
 a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
+.sec-h { margin: 0 0 12px; font-size: 13px; font-weight: 600; letter-spacing: .02em; color: var(--muted); }
+.hint { margin: -4px 0 12px; font-size: 12.5px; color: var(--accent); }
+
+/* Tüm simgeler aynı boyutta: 64px kutu, 32px çizim. */
 .apps {
-  display: grid; gap: 26px 8px; justify-items: center; align-items: start;
-  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  display: grid; gap: 20px 6px; justify-items: center; align-items: start;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
 }
 .app {
   --c1: oklch(var(--ic-l1) var(--ic-c) var(--hue));
   --c2: oklch(var(--ic-l2) var(--ic-c) calc(var(--hue) + 18));
-  width: 100%; max-width: 112px; min-width: 0;
-  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  width: 100%; max-width: 104px; min-width: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
   text-decoration: none; color: var(--fg); -webkit-tap-highlight-color: transparent;
 }
 .glyph {
-  position: relative; width: 68px; height: 68px; border-radius: 24px; display: grid; place-items: center; color: #fff;
+  position: relative; width: 64px; height: 64px; border-radius: 22px; display: grid; place-items: center; color: #fff;
   background: linear-gradient(150deg, var(--c1), var(--c2));
-  box-shadow: 0 8px 18px -6px color-mix(in oklab, var(--c2) 70%, transparent), inset 0 1px 0 rgba(255,255,255,.35);
+  box-shadow: 0 2px 6px var(--ic-shadow), inset 0 1px 0 rgba(255,255,255,.35);
 }
-.glyph svg { width: 34px; height: 34px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.18)); }
+.glyph svg { width: 32px; height: 32px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.16)); }
+/* Ad: 12.5px, orta kalınlık, en fazla iki satır; satırlar hizalı kalsın diye iki satırlık yer ayrılır. */
+.label {
+  font-size: 12.5px; font-weight: 500; line-height: 1.25; text-align: center; max-width: 100%; min-height: 2.5em;
+  overflow-wrap: anywhere; text-wrap: balance;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.st { margin-top: -4px; font-size: 11px; font-weight: 600; color: var(--muted); }
+.app.bakimda { opacity: .55; }
+.app:not([href]) { cursor: default; }
+
 .badge {
-  position: absolute; right: -5px; bottom: -5px; width: 24px; height: 24px; border-radius: 50%;
+  position: absolute; right: -5px; bottom: -5px; width: 22px; height: 22px; border-radius: 50%;
   display: none; place-items: center; background: var(--fg); color: var(--wall-a); border: 2px solid var(--wall-a);
 }
-.badge svg { width: 13px; height: 13px; filter: none; }
+.badge svg { width: 12px; height: 12px; filter: none; }
 .code-mode .badge { display: grid; }
-.label { font-size: 13px; font-weight: 500; text-align: center; line-height: 1.2; max-width: 100%; overflow-wrap: anywhere; text-wrap: balance; }
+.dot { position: absolute; right: -3px; top: -3px; width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--wall-a); background: #2fa36b; }
+.dot.deneme { background: #3b82f6; }
+.dot.bakimda { background: #e0a100; }
+.new {
+  position: absolute; left: -6px; top: -6px; padding: 1px 6px; border-radius: 999px;
+  font-size: 10px; font-weight: 700; line-height: 1.5; color: #fff; background: #e5484d; border: 2px solid var(--wall-a);
+}
+.star {
+  position: absolute; left: -6px; top: -6px; width: 24px; height: 24px; border-radius: 50%; display: none; place-items: center;
+  background: var(--fg); color: var(--wall-a); border: 2px solid var(--wall-a);
+}
+.star svg { width: 13px; height: 13px; filter: none; }
+.app.fav .star { background: #f5b301; color: #5a3d00; }
+.app.fav .star svg { fill: currentColor; }
+.edit-mode .star { display: grid; }
+.edit-mode .new { display: none; }
+.edit-mode .app { cursor: pointer; }
 .app:hover .glyph { filter: brightness(1.06); }
 .empty { color: var(--muted); text-align: center; padding: 20px 0; grid-column: 1 / -1; }
 footer { text-align: center; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
-@media (min-width: 640px) {
-  .apps { grid-template-columns: repeat(auto-fill, minmax(116px, 1fr)); gap: 34px 12px; }
-  .glyph { width: 76px; height: 76px; border-radius: 27px; }
-  .glyph svg { width: 38px; height: 38px; }
-  .app { max-width: 128px; }
-}
 @media (prefers-reduced-motion: no-preference) {
   .glyph { transition: transform .16s ease, filter .16s ease; }
   .app:hover .glyph { transform: translateY(-3px) scale(1.04); }
   .app:active .glyph { transform: scale(.94); }
 }
+
+/* Ayarlar penceresi */
+dialog.sheet {
+  border: 0; padding: 18px; width: min(92vw, 380px); border-radius: 24px;
+  background: var(--sheet); color: var(--fg); box-shadow: 0 20px 50px -12px rgba(0,0,0,.4);
+}
+dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
+.sheet-h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.sheet-h h2 { margin: 0; font-family: var(--font-display); font-size: 19px; }
+.row { display: flex; flex-direction: column; gap: 8px; padding: 12px 0; border-top: 1px solid var(--pill-line); }
+.row > span { font-size: 13px; font-weight: 600; color: var(--muted); }
+.row .seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.row .seg .chip { flex: 1; }
+.note { margin: 0; font-size: 12.5px; color: var(--muted); }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <h1>Karadeniz Ekosistemi <span class="ver" id="ver"></span></h1>
-    <p class="sub" id="sub">Bir simgeye dokun, uygulama açılsın.</p>
+  <header class="top">
+    <img class="logo" src="icon-192.png?v=14" alt="" width="36" height="36">
+    <div class="ttl">
+      <h1>Karadeniz Ekosistemi <span class="ver" id="ver"></span></h1>
+      <p class="sub">Tüm sistemlerim tek yerde.</p>
+    </div>
+    <div class="hbtns">
+      <button class="ibtn" type="button" id="themeBtn"></button>
+      <button class="ibtn" type="button" id="setBtn" aria-label="Ayarlar" aria-haspopup="dialog"></button>
+    </div>
   </header>
 
   <section class="hello" aria-label="Karşılama">
@@ -164,10 +237,24 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
     <button class="chip" type="button" data-f="Okul" aria-pressed="false">Okul</button>
     <button class="chip" type="button" data-f="Ders" aria-pressed="false">Ders</button>
     <button class="chip" type="button" data-f="Kişisel" aria-pressed="false">Kişisel</button>
-    <button class="chip" type="button" id="codeBtn" aria-pressed="false">Kaynak kodu</button>
+    <button class="chip" type="button" id="editBtn" aria-pressed="false"></button>
   </div>
 
-  <main id="out" class="apps"></main>
+  <section id="secRecent" hidden>
+    <h2 class="sec-h">Son kullanılanlar</h2>
+    <div class="apps" id="outRecent"></div>
+  </section>
+
+  <section id="secFav" hidden>
+    <h2 class="sec-h">Favoriler</h2>
+    <div class="apps" id="outFav"></div>
+  </section>
+
+  <section>
+    <h2 class="sec-h">Tüm uygulamalar</h2>
+    <p class="hint" id="editHint" hidden>Favoriye eklemek ya da çıkarmak için uygulamaya dokun.</p>
+    <main id="out" class="apps"></main>
+  </section>
 
   <footer>
     <span>github.com/karadenizmehmet-debug</span>
@@ -176,9 +263,40 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
   </footer>
 </div>
 
+<dialog class="sheet" id="sheet" aria-labelledby="sheetT">
+  <div class="sheet-h">
+    <h2 id="sheetT">Ayarlar</h2>
+    <button class="ibtn" type="button" id="sheetX" aria-label="Kapat"></button>
+  </div>
+  <div class="row">
+    <span>Tema</span>
+    <div class="seg" role="group" aria-label="Tema">
+      <button class="chip" type="button" data-t="light" aria-pressed="false">Açık</button>
+      <button class="chip" type="button" data-t="dark" aria-pressed="false">Koyu</button>
+      <button class="chip" type="button" data-t="" aria-pressed="false">Sistem</button>
+    </div>
+  </div>
+  <div class="row">
+    <span>Kaynak kodu</span>
+    <button class="chip" type="button" id="codeBtn" aria-pressed="false">Simgeler GitHub'a gitsin</button>
+  </div>
+  <div class="row">
+    <span>Ana ekrana yükle</span>
+    <button class="chip" type="button" id="installBtn" hidden>Yükle</button>
+    <p class="note" id="installNote">Tarayıcı menüsünden «Ana ekrana ekle» seç.</p>
+  </div>
+  <div class="row">
+    <span>Geçmiş</span>
+    <div class="seg">
+      <button class="chip" type="button" id="clearRecent">Son kullanılanları temizle</button>
+      <button class="chip" type="button" id="clearFav">Favorileri sıfırla</button>
+    </div>
+  </div>
+</dialog>
+
 <script>
 (function () {
-  var VERSION = "2.3"; // her değişiklikte artır: 2.3, 2.4 ...
+  var VERSION = "2.4"; // her değişiklikte artır: 2.4, 2.5 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";
@@ -195,31 +313,49 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
     nefes: '<path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>',
     aile: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2A5 5 0 0 1 21 19"/>',
     resim: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5L7 20"/>',
-    mebbis: '<path d="M3 10 12 4l9 6"/><path d="M5 10v9M9.5 10v9M14.5 10v9M19 10v9M3 20h18"/>'
+    mebbis: '<path d="M3 10 12 4l9 6"/><path d="M5 10v9M9.5 10v9M14.5 10v9M19 10v9M3 20h18"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>',
+    moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    star: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9Z"/>',
+    close: '<path d="M6 6l12 12M18 6 6 18"/>'
   };
   function svg(inner, w) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.8) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>'; }
   var CODE = svg('<path d="m8 8-4 4 4 4M16 8l4 4-4 4"/>', 2.4);
 
+  // status: aktif | deneme | bakimda. since: eklenme tarihi (14 gün "Yeni" etiketi çıkar, açılınca kalkar).
   var items = [
-    { name: "Dijital Pano", cat: "Okul", hue: 235, icon: "pano", open: U + "digitalpano/", repo: "digitalpano", tip: "Okul panosu" },
-    { name: "Pano Paneli", cat: "Okul", hue: 262, icon: "panel", open: U + "digitalpano/#/panel", repo: "digitalpano", tip: "Pano yönetim paneli (giriş ister)" },
-    { name: "oZil Kumanda", cat: "Okul", hue: 60, icon: "zil", open: U + "Ozil/kumanda.html", repo: "Ozil", tip: "Okul zili uzaktan kumanda" },
-    { name: "İstiklal Marşı", cat: "Okul", hue: 25, icon: "bayrak", open: U + "Zilfar/", repo: "Zilfar", tip: "Marşı uzaktan çalan panel" },
-    { name: "Yegitek Takip", cat: "Okul", hue: 195, icon: "takip", open: U + "Yegitek/", repo: "Yegitek", tip: "Okul sorumlusu takip uygulaması" },
-    { name: "MEBBİS", cat: "Okul", hue: 215, icon: "mebbis", open: "https://mebbis.meb.gov.tr/", tip: "MEB bilgi sistemi (giriş ister)" },
-    { name: "Ders Rotası 6", cat: "Ders", hue: 150, icon: "kitap", open: U + "Emiko-okul/", repo: "Emiko-okul", tip: "6. sınıf konu anlatımı ve istasyonlar" },
-    { name: "BTY Ders", cat: "Ders", hue: 295, icon: "kod", open: U + "Bty-ders/", repo: "Bty-ders", tip: "Bilişim ve Yapay Zekâ yazılı hazırlık" },
-    { name: "Nefes", cat: "Kişisel", hue: 178, icon: "nefes", open: U + "Quitcigaret/", repo: "Quitcigaret", tip: "Sigara bırakma takibi" },
-    { name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)" },
-    { name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler" }
+    { id: "pano", name: "Dijital Pano", cat: "Okul", hue: 235, icon: "pano", open: U + "digitalpano/", repo: "digitalpano", tip: "Okul panosu", status: "aktif" },
+    { id: "panel", name: "Pano Paneli", cat: "Okul", hue: 262, icon: "panel", open: U + "digitalpano/#/panel", repo: "digitalpano", tip: "Pano yönetim paneli (giriş ister)", status: "aktif" },
+    { id: "zil", name: "oZil Kumanda", cat: "Okul", hue: 60, icon: "zil", open: U + "Ozil/kumanda.html", repo: "Ozil", tip: "Okul zili uzaktan kumanda", status: "aktif" },
+    { id: "marsi", name: "İstiklal Marşı", cat: "Okul", hue: 25, icon: "bayrak", open: U + "Zilfar/", repo: "Zilfar", tip: "Marşı uzaktan çalan panel", status: "aktif" },
+    { id: "yegitek", name: "Yegitek Takip", cat: "Okul", hue: 195, icon: "takip", open: U + "Yegitek/", repo: "Yegitek", tip: "Okul sorumlusu takip uygulaması", status: "aktif" },
+    { id: "mebbis", name: "MEBBİS", cat: "Okul", hue: 215, icon: "mebbis", open: "https://mebbis.meb.gov.tr/", tip: "MEB bilgi sistemi (giriş ister)", status: "aktif" },
+    { id: "ders6", name: "Ders Rotası 6", cat: "Ders", hue: 150, icon: "kitap", open: U + "Emiko-okul/", repo: "Emiko-okul", tip: "6. sınıf konu anlatımı ve istasyonlar", status: "aktif" },
+    { id: "bty", name: "BTY Ders", cat: "Ders", hue: 295, icon: "kod", open: U + "Bty-ders/", repo: "Bty-ders", tip: "Bilişim ve Yapay Zekâ yazılı hazırlık", status: "aktif" },
+    { id: "nefes", name: "Nefes", cat: "Kişisel", hue: 178, icon: "nefes", open: U + "Quitcigaret/", repo: "Quitcigaret", tip: "Sigara bırakma takibi", status: "aktif" },
+    { id: "aile", name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)", status: "aktif" },
+    { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "deneme", since: "2026-11-04" }
   ];
+  var STATUS = { aktif: "Aktif", deneme: "Deneme", bakimda: "Bakımda" };
 
   var out = document.getElementById("out");
+  var outRecent = document.getElementById("outRecent");
+  var outFav = document.getElementById("outFav");
+  var secRecent = document.getElementById("secRecent");
+  var secFav = document.getElementById("secFav");
+  var editHint = document.getElementById("editHint");
   var q = document.getElementById("q");
-  var sub = document.getElementById("sub");
   var codeBtn = document.getElementById("codeBtn");
+  var editBtn = document.getElementById("editBtn");
   var chips = Array.prototype.slice.call(document.querySelectorAll(".chip[data-f]"));
-  var filter = "all", codeMode = false;
+  var filter = "all", codeMode = false, editMode = false;
+
+  function load(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  var favs = load("genel-arayuz-fav", []);
+  var recent = load("genel-arayuz-son", []);
+  var opened = load("genel-arayuz-acilan", []);
   try {
     var s = localStorage.getItem("genel-arayuz-kategori");
     if (s && ["Okul", "Ders", "Kişisel"].indexOf(s) !== -1) filter = s;
@@ -227,34 +363,72 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
   } catch (e) {}
 
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; }
+  function byId(id) { for (var i = 0; i < items.length; i++) if (items[i].id === id) return items[i]; return null; }
+  function isNew(p) { return !!p.since && opened.indexOf(p.id) === -1 && (Date.now() - Date.parse(p.since)) / 864e5 <= 14; }
+  function touch(id) {
+    recent = [id].concat(recent.filter(function (x) { return x !== id; })).slice(0, 3);
+    if (opened.indexOf(id) === -1) opened.push(id);
+    save("genel-arayuz-son", recent); save("genel-arayuz-acilan", opened);
+  }
+  function toggleFav(id) {
+    var i = favs.indexOf(id);
+    if (i === -1) favs.push(id); else favs.splice(i, 1);
+    save("genel-arayuz-fav", favs);
+    render();
+  }
+
   function app(p) {
-    var a = el("a", "app");
+    var down = p.status === "bakimda";
     var showCode = codeMode && !!p.repo; // deposu olmayan (dış site) simge her zaman sitesini açar
-    a.href = showCode ? G + p.repo : p.open;
-    a.target = "_blank"; a.rel = "noopener noreferrer";
-    a.title = p.tip + (showCode ? " (kaynak kodu)" : "");
+    var a = el("a", "app" + (down ? " bakimda" : "") + (favs.indexOf(p.id) !== -1 ? " fav" : ""));
+    if (!down || showCode) {
+      a.href = showCode ? G + p.repo : p.open;
+      a.target = "_blank"; a.rel = "noopener noreferrer";
+    } else {
+      a.setAttribute("aria-disabled", "true");
+    }
+    a.title = p.tip + " · " + STATUS[p.status] + (showCode ? " (kaynak kodu)" : "");
     a.style.setProperty("--hue", p.hue);
     var g = el("span", "glyph");
     g.innerHTML = svg(ICONS[p.icon]);
+    if (isNew(p)) g.appendChild(el("span", "new", "Yeni"));
+    var d = el("span", "dot " + p.status); d.setAttribute("role", "img"); d.setAttribute("aria-label", STATUS[p.status]);
+    g.appendChild(d);
+    var st = el("span", "star"); st.innerHTML = svg(ICONS.star, 2); g.appendChild(st);
     if (p.repo) { var b = el("span", "badge"); b.innerHTML = CODE; g.appendChild(b); }
     a.appendChild(g);
     a.appendChild(el("span", "label", p.name));
+    if (p.status !== "aktif") a.appendChild(el("span", "st", STATUS[p.status]));
+    a.addEventListener("click", function (e) {
+      if (editMode) { e.preventDefault(); toggleFav(p.id); return; }
+      if (a.hasAttribute("aria-disabled")) { e.preventDefault(); return; }
+      touch(p.id); // liste, sayfa tekrar görününce yenilenir (yeni sekme açılırken DOM'a dokunma)
+    });
     return a;
   }
+  function fill(box, list) { box.textContent = ""; list.forEach(function (p) { box.appendChild(app(p)); }); }
+
   function render() {
-    var term = q.value.trim().toLowerCase();
-    out.textContent = "";
-    var n = 0;
-    items.forEach(function (p) {
-      if (filter !== "all" && p.cat !== filter) return;
-      if (term && (p.name + " " + p.tip + " " + p.cat).toLowerCase().indexOf(term) === -1) return;
-      out.appendChild(app(p)); n++;
+    var term = q.value.trim().toLocaleLowerCase("tr");
+    var home = filter === "all" && !term;
+    var recents = recent.map(byId).filter(Boolean);
+    var favItems = favs.map(byId).filter(Boolean);
+    fill(outRecent, recents); secRecent.hidden = !(home && recents.length);
+    fill(outFav, favItems); secFav.hidden = !(home && favItems.length);
+    var list = items.filter(function (p) {
+      if (filter !== "all" && p.cat !== filter) return false;
+      if (term && (p.name + " " + p.tip + " " + p.cat + " " + STATUS[p.status]).toLocaleLowerCase("tr").indexOf(term) === -1) return false;
+      return !(home && favs.indexOf(p.id) !== -1); // favoriler üstte sabit, aşağıda tekrarlanmaz
     });
-    if (!n) out.appendChild(el("p", "empty", "Eşleşen uygulama yok."));
+    fill(out, list);
+    if (!list.length && !(home && favItems.length)) out.appendChild(el("p", "empty", "Eşleşen uygulama yok."));
     chips.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-f") === filter)); });
     codeBtn.setAttribute("aria-pressed", String(codeMode));
-    out.classList.toggle("code-mode", codeMode);
-    sub.textContent = codeMode ? "Kaynak kodu açık: simgeler GitHub'a gider." : "Bir simgeye dokun, uygulama açılsın.";
+    editBtn.setAttribute("aria-pressed", String(editMode));
+    editBtn.innerHTML = svg(ICONS.star, 2) + (editMode ? "Bitti" : "Favori seç");
+    editHint.hidden = !editMode;
+    document.body.classList.toggle("code-mode", codeMode);
+    document.body.classList.toggle("edit-mode", editMode);
   }
   chips.forEach(function (b) {
     b.addEventListener("click", function () {
@@ -263,12 +437,71 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
       render();
     });
   });
+  editBtn.addEventListener("click", function () { editMode = !editMode; render(); });
   codeBtn.addEventListener("click", function () {
     codeMode = !codeMode;
     try { localStorage.setItem("genel-arayuz-kod", codeMode ? "1" : "0"); } catch (e) {}
     render();
   });
   q.addEventListener("input", render);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) render(); });
+
+  // Tema: "light" | "dark" | "" (sistem)
+  var root = document.documentElement;
+  var themeBtn = document.getElementById("themeBtn");
+  var themeMeta = document.getElementById("themeColor");
+  var themeSegs = Array.prototype.slice.call(document.querySelectorAll("[data-t]"));
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  function storedTheme() { try { var t = localStorage.getItem("genel-arayuz-tema"); return t === "light" || t === "dark" ? t : ""; } catch (e) { return ""; } }
+  function effective() { var t = root.getAttribute("data-theme"); return t || (mq && mq.matches ? "dark" : "light"); }
+  function themeUi() {
+    var dark = effective() === "dark";
+    themeBtn.innerHTML = svg(dark ? ICONS.sun : ICONS.moon);
+    themeBtn.setAttribute("aria-label", dark ? "Açık temaya geç" : "Koyu temaya geç");
+    themeMeta.setAttribute("content", dark ? "#0c1a24" : "#cfe4ee");
+    var cur = storedTheme();
+    themeSegs.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-t") === cur)); });
+  }
+  function setTheme(t) {
+    if (t) root.setAttribute("data-theme", t); else root.removeAttribute("data-theme");
+    try { if (t) localStorage.setItem("genel-arayuz-tema", t); else localStorage.removeItem("genel-arayuz-tema"); } catch (e) {}
+    themeUi();
+  }
+  themeBtn.addEventListener("click", function () { setTheme(effective() === "dark" ? "light" : "dark"); });
+  themeSegs.forEach(function (b) { b.addEventListener("click", function () { setTheme(b.getAttribute("data-t")); }); });
+  if (mq && mq.addEventListener) mq.addEventListener("change", themeUi);
+
+  // Ayarlar
+  var sheet = document.getElementById("sheet");
+  var setBtn = document.getElementById("setBtn");
+  var sheetX = document.getElementById("sheetX");
+  var installBtn = document.getElementById("installBtn");
+  var installNote = document.getElementById("installNote");
+  setBtn.innerHTML = svg(ICONS.gear);
+  sheetX.innerHTML = svg(ICONS.close);
+  setBtn.addEventListener("click", function () { if (sheet.showModal) sheet.showModal(); else sheet.setAttribute("open", ""); });
+  function closeSheet() { if (sheet.close) sheet.close(); else sheet.removeAttribute("open"); }
+  sheetX.addEventListener("click", closeSheet);
+  sheet.addEventListener("click", function (e) { if (e.target === sheet) closeSheet(); });
+  document.getElementById("clearRecent").addEventListener("click", function () { recent = []; save("genel-arayuz-son", recent); render(); });
+  document.getElementById("clearFav").addEventListener("click", function () { favs = []; save("genel-arayuz-fav", favs); render(); });
+
+  // PWA: yüklenebilir
+  var installEvt = null;
+  var standalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  if (standalone) installNote.textContent = "Uygulama ana ekrana yüklü.";
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault(); installEvt = e;
+    installBtn.hidden = false; installNote.hidden = true;
+  });
+  installBtn.addEventListener("click", function () {
+    if (!installEvt) return;
+    installEvt.prompt(); installEvt = null; installBtn.hidden = true; installNote.hidden = false;
+    installNote.textContent = "Yükleme isteği gösterildi.";
+  });
+  window.addEventListener("appinstalled", function () { installBtn.hidden = true; installNote.hidden = false; installNote.textContent = "Uygulama ana ekrana yüklendi."; });
+
+  themeUi();
   render();
 
   // Karşılama: saat, tarih, hava durumu (Akşehir, Open-Meteo, anahtarsız)
@@ -297,7 +530,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
     95: ["Gök gürültülü fırtına", "storm"], 96: ["Dolu ve fırtına", "storm"], 99: ["Dolu ve fırtına", "storm"]
   };
   var WICON = {
-    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    sun: ICONS.sun,
     cloudsun: '<path d="M7 18a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9Z"/><path d="M5 5.5 6.2 6.7M3 11H1.5"/>',
     cloud: '<path d="M7 18a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9Z"/>',
     rain: '<path d="M7 15a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 6a4.5 4.5 0 0 1 .5 9"/><path d="M8 18l-1 3M12 18l-1 3M16 18l-1 3"/>',

@@ -338,7 +338,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.8"; // her değişiklikte artır: 2.8, 2.9 ...
+  var VERSION = "2.9"; // her değişiklikte artır: 2.8, 2.9 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -355,6 +355,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     kod: '<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 5l-4 14"/>',
     nefes: '<path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>',
     aile: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2A5 5 0 0 1 21 19"/>',
+    dosya: '<path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18"/><path d="M3.5 8H6M3.5 16H6"/><path d="M10 8h5M10 12h5"/>',
     resim: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5L7 20"/>',
     mebbis: '<path d="M3 10 12 4l9 6"/><path d="M5 10v9M9.5 10v9M14.5 10v9M19 10v9M3 20h18"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>',
@@ -378,7 +379,8 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     { id: "bty", name: "BTY Ders", cat: "Ders", hue: 295, icon: "kod", open: U + "Bty-ders/", repo: "Bty-ders", tip: "Bilişim ve Yapay Zekâ yazılı hazırlık", status: "aktif" },
     { id: "nefes", name: "Nefes", cat: "Kişisel", hue: 178, icon: "nefes", open: U + "Quitcigaret/", repo: "Quitcigaret", tip: "Sigara bırakma takibi", status: "aktif" },
     { id: "aile", name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)", status: "aktif" },
-    { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "aktif", since: "2026-11-04" }
+    { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "aktif", since: "2026-11-04" },
+    { id: "dosya", name: "Öğretmen Dosyası", cat: "Ders", hue: 210, icon: "dosya", open: U + "Ogretmendosyasi/", repo: "Ogretmendosyasi", tip: "2026-2027 dijital öğretmen dosyası (giriş ister)", status: "aktif", since: "2026-11-04" }
   ];
   var STATUS = { aktif: "Aktif", bakimda: "Bakımda", erisilemiyor: "Erişilemiyor", pasif: "Pasif" };
   var STATUS_INFO = {

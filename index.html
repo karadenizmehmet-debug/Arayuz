@@ -6,7 +6,7 @@
 <meta name="author" content="Mehmet Karadeniz, 2026-2027">
 <meta name="copyright" content="© Mehmet Karadeniz, 2026-2027. Tüm hakları saklıdır.">
 <meta name="theme-color" content="#0f1a22">
-<title>Genel Arayüz</title>
+<title>Karadeniz Ekosistemi</title>
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=14">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=14">
 <link rel="manifest" href="manifest.webmanifest?v=14">
@@ -143,7 +143,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
 <body>
 <div class="wrap">
   <header>
-    <h1>Genel Arayüz <span class="ver" id="ver"></span></h1>
+    <h1>Karadeniz Ekosistemi <span class="ver" id="ver"></span></h1>
     <p class="sub" id="sub">Bir simgeye dokun, uygulama açılsın.</p>
   </header>
 
@@ -178,7 +178,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
 
 <script>
 (function () {
-  var VERSION = "2.2"; // her değişiklikte artır: 2.2, 2.3 ...
+  var VERSION = "2.3"; // her değişiklikte artır: 2.3, 2.4 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";

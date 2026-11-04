@@ -1,4 +1,4 @@
-# Genel Arayüz
+# Karadeniz Ekosistemi
 
 Okul sistemleri, ders içerikleri ve kişisel uygulamalara tek yerden giriş sayfası.
 

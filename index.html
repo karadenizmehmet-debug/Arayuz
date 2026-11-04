@@ -69,6 +69,17 @@ h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 
   color: var(--fg); background: var(--pill); border: 1px solid var(--pill-line); border-radius: 999px;
 }
 .sub { margin: 0; color: var(--muted); font-size: 14px; }
+.hello {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center;
+  padding: 18px 16px; background: var(--pill); border: 1px solid var(--pill-line); border-radius: 28px;
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+.hello-title { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(22px, 5.5vw, 30px); letter-spacing: -.01em; line-height: 1.15; }
+.clock { font-family: var(--font-display); font-weight: 700; font-size: clamp(44px, 13vw, 64px); line-height: 1.05; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.date { color: var(--muted); font-size: 14px; }
+.weather { margin-top: 6px; display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 500; min-height: 24px; }
+.weather svg { width: 24px; height: 24px; color: var(--accent); flex: none; }
+.weather .w-meta { color: var(--muted); font-weight: 400; font-size: 13px; }
 .search {
   position: relative; display: flex; align-items: center;
   background: var(--pill); border: 1px solid var(--pill-line); border-radius: 999px;
@@ -136,6 +147,13 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
     <p class="sub" id="sub">Bir simgeye dokun, uygulama açılsın.</p>
   </header>
 
+  <section class="hello" aria-label="Karşılama">
+    <p class="hello-title">Hoş geldin Mehmet</p>
+    <div class="clock" id="clock" aria-live="off">--:--</div>
+    <div class="date" id="date"></div>
+    <div class="weather" id="weather"><span class="w-meta">Hava durumu yükleniyor…</span></div>
+  </section>
+
   <div class="search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input id="q" type="search" placeholder="Uygulama ara" aria-label="Uygulama ara" autocomplete="off">
@@ -160,7 +178,7 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
 
 <script>
 (function () {
-  var VERSION = "2.1"; // her değişiklikte artır: 2.1, 2.2 ...
+  var VERSION = "2.2"; // her değişiklikte artır: 2.2, 2.3 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   var U = "https://karadenizmehmet-debug.github.io/";
@@ -252,6 +270,67 @@ footer { text-align: center; font-size: 12px; color: var(--muted); display: flex
   });
   q.addEventListener("input", render);
   render();
+
+  // Karşılama: saat, tarih, hava durumu (Akşehir, Open-Meteo, anahtarsız)
+  var clockEl = document.getElementById("clock");
+  var dateEl = document.getElementById("date");
+  var weatherEl = document.getElementById("weather");
+  var TIME_FMT = new Intl.DateTimeFormat("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false, timeZone: "Europe/Istanbul" });
+  var DATE_FMT = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric", weekday: "long", timeZone: "Europe/Istanbul" });
+  function tick() {
+    var now = new Date();
+    clockEl.textContent = TIME_FMT.format(now);
+    dateEl.textContent = DATE_FMT.format(now);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  var WMO = {
+    0: ["Açık", "sun"], 1: ["Çoğunlukla açık", "sun"], 2: ["Parçalı bulutlu", "cloudsun"], 3: ["Kapalı", "cloud"],
+    45: ["Sisli", "cloud"], 48: ["Kırağılı sis", "cloud"],
+    51: ["Çiseleme", "rain"], 53: ["Çiseleme", "rain"], 55: ["Yoğun çiseleme", "rain"],
+    61: ["Yağmurlu", "rain"], 63: ["Yağmurlu", "rain"], 65: ["Şiddetli yağmur", "rain"],
+    66: ["Dondurucu yağmur", "rain"], 67: ["Dondurucu yağmur", "rain"],
+    71: ["Kar yağışlı", "snow"], 73: ["Kar yağışlı", "snow"], 75: ["Yoğun kar", "snow"], 77: ["Kar taneleri", "snow"],
+    80: ["Sağanak", "rain"], 81: ["Sağanak", "rain"], 82: ["Şiddetli sağanak", "rain"],
+    85: ["Kar sağanağı", "snow"], 86: ["Kar sağanağı", "snow"],
+    95: ["Gök gürültülü fırtına", "storm"], 96: ["Dolu ve fırtına", "storm"], 99: ["Dolu ve fırtına", "storm"]
+  };
+  var WICON = {
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    cloudsun: '<path d="M7 18a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9Z"/><path d="M5 5.5 6.2 6.7M3 11H1.5"/>',
+    cloud: '<path d="M7 18a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 9a4.5 4.5 0 0 1 .5 9Z"/>',
+    rain: '<path d="M7 15a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 6a4.5 4.5 0 0 1 .5 9"/><path d="M8 18l-1 3M12 18l-1 3M16 18l-1 3"/>',
+    snow: '<path d="M7 15a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 6a4.5 4.5 0 0 1 .5 9"/><path d="M8 19h.01M12 19h.01M16 19h.01M10 21h.01M14 21h.01"/>',
+    storm: '<path d="M7 14a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 5a4.5 4.5 0 0 1 .5 9"/><path d="m12 13-2 4h3l-2 4"/>'
+  };
+  function showWeather(w) {
+    var info = WMO[w.code] || ["Hava durumu", "cloud"];
+    weatherEl.textContent = "";
+    var ic = document.createElement("span");
+    ic.innerHTML = svg(WICON[info[1]] || WICON.cloud);
+    weatherEl.appendChild(ic.firstChild);
+    weatherEl.appendChild(document.createTextNode("Akşehir " + Math.round(w.temp) + "°C, " + info[0] + " "));
+    var meta = el("span", "w-meta", "· Hissedilen " + Math.round(w.feels) + "°C · Rüzgâr " + Math.round(w.wind) + " km/sa");
+    weatherEl.appendChild(meta);
+  }
+  function loadWeather() {
+    var url = "https://api.open-meteo.com/v1/forecast?latitude=38.356&longitude=31.416" +
+      "&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=Europe%2FIstanbul";
+    fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (d) {
+      var c = d.current;
+      var w = { temp: c.temperature_2m, feels: c.apparent_temperature, code: c.weather_code, wind: c.wind_speed_10m };
+      showWeather(w);
+      try { localStorage.setItem("genel-arayuz-hava", JSON.stringify(w)); } catch (e) {}
+    }).catch(function () {
+      var cached = null;
+      try { cached = JSON.parse(localStorage.getItem("genel-arayuz-hava")); } catch (e) {}
+      if (cached) showWeather(cached);
+      else weatherEl.innerHTML = '<span class="w-meta">Hava durumu alınamadı.</span>';
+    });
+  }
+  loadWeather();
+  setInterval(loadWeather, 15 * 60 * 1000);
 })();
 </script>
 </body>

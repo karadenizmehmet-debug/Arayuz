@@ -108,6 +108,8 @@ h1 {
 .weather .w-meta { color: var(--muted); font-weight: 400; font-size: 12.5px; }
 .ticker { width: 100%; margin-top: 8px; overflow: hidden; border-radius: 10px; background: var(--pill-line); }
 .ticker[hidden] { display: none; }
+.ticker { display: block; color: inherit; text-decoration: none; }
+.ticker-track.still { animation: none; padding-left: 0; }
 .ticker-track { display: inline-flex; white-space: nowrap; padding: 6px 0; font-size: 13px; animation: ticker-run 28s linear infinite; }
 .ticker:hover .ticker-track { animation-play-state: paused; }
 .ticker-item { padding: 0 18px; }
@@ -262,7 +264,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     <div class="clock" id="clock" aria-live="off">--:--</div>
     <div class="date" id="date"></div>
     <div class="weather" id="weather"><span class="w-meta">Hava durumu yükleniyor…</span></div>
-    <div class="ticker" id="ticker" hidden><div class="ticker-track" id="tickerTrack"></div></div>
+    <a class="ticker" id="ticker" href="../Yegitek/" aria-label="Yegitek yapılacakları, açmak için dokun" hidden><span class="ticker-track" id="tickerTrack"></span></a>
   </section>
 
   <div class="search">
@@ -347,7 +349,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.10"; // her değişiklikte artır: 2.9, 2.10 ...
+  var VERSION = "2.11"; // her değişiklikte artır: 2.10, 2.11 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -675,22 +677,42 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   loadWeather();
   setInterval(loadWeather, 15 * 60 * 1000);
 
-  // Yapılacaklar şeridi: Yeğitek verisi (public Kayitlar reposu), açık işler
-  var YEGITEK_URL = "https://raw.githubusercontent.com/karadenizmehmet-debug/Kayitlar/main/yegitek/veri.json";
+  // Yapılacaklar şeridi: Yegitek'in bekleyen yapılacakları ve açık işleri.
+  // Veri özel Kayitlar reposunda; Yegitek ile aynı adreste (karadenizmehmet-debug.github.io)
+  // çalıştığımız için Yegitek'e girilen token'ı (localStorage "yt_token") ve önbelleği ("yt_cache") kullanırız.
+  var YEGITEK_API = "https://api.github.com/repos/karadenizmehmet-debug/Kayitlar/contents/yegitek/veri.json?ref=main";
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function tickerItems(data) {
+    var kisa = {};
+    (data.okullar || []).forEach(function (o) { kisa[o.id] = o.kisa || o.ad || ""; });
     var items = [];
-    (data.yapilacaklar || []).forEach(function (x) { if (!x.tamam) items.push({ tag: "Yapılacak", text: x.metin || "" }); });
-    (data.isler || []).forEach(function (x) { if (x.durum !== "tamam") items.push({ tag: "İş", text: x.aciklama || x.tur || "" }); });
-    return items.filter(function (i) { return i.text; });
+    (data.yapilacaklar || []).forEach(function (x) {
+      if (x.tamam || !x.metin) return;
+      var t = x.metin;
+      if (Array.isArray(x.tahtalar) && x.tahtalar.length > 1) {
+        var bitti = x.tdone ? Object.keys(x.tdone).length : 0;
+        t += " (" + bitti + "/" + x.tahtalar.length + ")";
+      }
+      items.push({ tag: kisa[x.okul] || "Genel", text: t, o: x.olusturma || 0 });
+    });
+    (data.isler || []).forEach(function (x) {
+      if (x.durum === "tamam") return;
+      var t = x.aciklama || x.tur;
+      if (t) items.push({ tag: kisa[x.okul] || "İş", text: t, o: x.olusturma || 0 });
+    });
+    return items.sort(function (a, b) { return a.tag.localeCompare(b.tag, "tr") || a.o - b.o; });
   }
-  function showTicker(items) {
+  function showTicker(items, bos) {
     var box = document.getElementById("ticker");
     var track = document.getElementById("tickerTrack");
     track.textContent = "";
-    if (!items.length) { box.hidden = false; track.appendChild(makeItem({ tag: "", text: "Bugün için bekleyen iş yok" })); return; }
     box.hidden = false;
-    // İçeriği iki kez yazıyoruz ki kayma sürekli görünsün
+    if (!items.length) { track.classList.add("still"); track.appendChild(makeItem({ tag: "", text: bos })); return; }
+    track.classList.remove("still");
+    // İçeriği iki kez yazıyoruz ki kayma kesintisiz görünsün; hız metin uzunluğuna göre sabit kalsın
     for (var k = 0; k < 2; k++) items.forEach(function (i) { track.appendChild(makeItem(i)); });
+    var len = items.reduce(function (n, i) { return n + i.tag.length + i.text.length + 6; }, 0);
+    track.style.animationDuration = Math.max(18, Math.round(len * 0.22)) + "s";
   }
   function makeItem(i) {
     var el = document.createElement("span");
@@ -700,12 +722,23 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     return el;
   }
   function loadTicker() {
-    fetch(YEGITEK_URL, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : Promise.reject(); })
-      .then(function (d) { showTicker(tickerItems(d)); })
-      .catch(function () { document.getElementById("ticker").hidden = true; });
+    var token = lsGet("yt_token");
+    try { var c = JSON.parse(lsGet("yt_cache") || "null"); if (c && c.data) showTicker(tickerItems(c.data), "Bekleyen iş yok"); } catch (e) {}
+    if (!token) { showTicker([], "Yapılacakları görmek için Yegitek'i açıp “Bağlan” ile token gir"); return; }
+    fetch(YEGITEK_API, { cache: "no-store", headers: { Accept: "application/vnd.github.raw+json", Authorization: "Bearer " + token, "X-GitHub-Api-Version": "2022-11-28" } })
+      .then(function (r) {
+        if (r.status === 401 || r.status === 403) return Promise.reject("yetki");
+        return r.ok ? r.json() : Promise.reject("http");
+      })
+      .then(function (d) { showTicker(tickerItems(d), "Bekleyen iş yok"); })
+      .catch(function (e) {
+        if (e === "yetki") showTicker([], "Yegitek token'ı geçersiz. Yegitek'te yeniden “Bağlan”");
+        else if (!lsGet("yt_cache")) document.getElementById("ticker").hidden = true;
+      });
   }
   loadTicker();
   setInterval(loadTicker, 10 * 60 * 1000);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) loadTicker(); });
 })();
 </script>
 </body>

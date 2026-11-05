@@ -106,6 +106,14 @@ h1 {
 .weather { margin-top: 3px; display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 500; min-height: 22px; }
 .weather svg { width: 22px; height: 22px; color: var(--accent); flex: none; }
 .weather .w-meta { color: var(--muted); font-weight: 400; font-size: 12.5px; }
+.ticker { width: 100%; margin-top: 8px; overflow: hidden; border-radius: 10px; background: var(--pill-line); }
+.ticker[hidden] { display: none; }
+.ticker-track { display: inline-flex; white-space: nowrap; padding: 6px 0; font-size: 13px; animation: ticker-run 28s linear infinite; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.ticker-item { padding: 0 18px; }
+.ticker-item b { color: var(--accent); font-weight: 600; margin-right: 6px; }
+@keyframes ticker-run { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
 
 .search {
   position: relative; display: flex; align-items: center;
@@ -254,6 +262,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     <div class="clock" id="clock" aria-live="off">--:--</div>
     <div class="date" id="date"></div>
     <div class="weather" id="weather"><span class="w-meta">Hava durumu yükleniyor…</span></div>
+    <div class="ticker" id="ticker" hidden><div class="ticker-track" id="tickerTrack"></div></div>
   </section>
 
   <div class="search">
@@ -338,7 +347,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.9"; // her değişiklikte artır: 2.8, 2.9 ...
+  var VERSION = "2.10"; // her değişiklikte artır: 2.9, 2.10 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -665,6 +674,38 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   }
   loadWeather();
   setInterval(loadWeather, 15 * 60 * 1000);
+
+  // Yapılacaklar şeridi: Yeğitek verisi (public Kayitlar reposu), açık işler
+  var YEGITEK_URL = "https://raw.githubusercontent.com/karadenizmehmet-debug/Kayitlar/main/yegitek/veri.json";
+  function tickerItems(data) {
+    var items = [];
+    (data.yapilacaklar || []).forEach(function (x) { if (!x.tamam) items.push({ tag: "Yapılacak", text: x.metin || "" }); });
+    (data.isler || []).forEach(function (x) { if (x.durum !== "tamam") items.push({ tag: "İş", text: x.aciklama || x.tur || "" }); });
+    return items.filter(function (i) { return i.text; });
+  }
+  function showTicker(items) {
+    var box = document.getElementById("ticker");
+    var track = document.getElementById("tickerTrack");
+    track.textContent = "";
+    if (!items.length) { box.hidden = false; track.appendChild(makeItem({ tag: "", text: "Bugün için bekleyen iş yok" })); return; }
+    box.hidden = false;
+    // İçeriği iki kez yazıyoruz ki kayma sürekli görünsün
+    for (var k = 0; k < 2; k++) items.forEach(function (i) { track.appendChild(makeItem(i)); });
+  }
+  function makeItem(i) {
+    var el = document.createElement("span");
+    el.className = "ticker-item";
+    if (i.tag) { var b = document.createElement("b"); b.textContent = i.tag + ":"; el.appendChild(b); }
+    el.appendChild(document.createTextNode(i.text));
+    return el;
+  }
+  function loadTicker() {
+    fetch(YEGITEK_URL, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+      .then(function (d) { showTicker(tickerItems(d)); })
+      .catch(function () { document.getElementById("ticker").hidden = true; });
+  }
+  loadTicker();
+  setInterval(loadTicker, 10 * 60 * 1000);
 })();
 </script>
 </body>

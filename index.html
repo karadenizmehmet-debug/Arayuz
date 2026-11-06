@@ -349,7 +349,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.13"; // her değişiklikte artır: 2.10, 2.11 ...
+  var VERSION = "2.14"; // her değişiklikte artır: 2.10, 2.11 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -393,7 +393,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     { id: "aile", name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)", status: "aktif" },
     { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "aktif", since: "2026-11-04" },
     { id: "dosya", name: "Öğretmen Dosyası", cat: "Ders", hue: 210, icon: "dosya", open: "https://ogretmendosyam.web.app/", repo: "Ogretmendosyasi", tip: "2026-2027 dijital öğretmen dosyası (giriş ister)", status: "aktif", since: "2026-11-04" },
-    { id: "kitap", name: "Kitap Kâtibi", cat: "Okul", hue: 95, icon: "kayit", open: U + "Kitap-kayit/", repo: "Kitap-kayit", tip: "Telif sayfası fotoğrafından kitap kaydı, Excel'e aktarır", status: "aktif", since: "2026-11-06" }
+    { id: "kitap", name: "Künye", cat: "Okul", hue: 95, icon: "kayit", open: U + "Kitap-kayit/", repo: "Kitap-kayit", tip: "Telif sayfası fotoğrafından kitap kaydı, Excel'e aktarır", status: "aktif", since: "2026-11-06" }
   ];
   var STATUS = { aktif: "Aktif", bakimda: "Bakımda", erisilemiyor: "Erişilemiyor", pasif: "Pasif" };
   var STATUS_INFO = {

@@ -170,6 +170,8 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
   background: linear-gradient(150deg, var(--c1), var(--c2));
   box-shadow: 0 2px 6px var(--ic-shadow), inset 0 1px 0 rgba(255,255,255,.35);
 }
+.glyph.logo { background: none; box-shadow: 0 2px 6px var(--ic-shadow); border-radius: 14px; }
+.glyph.logo img { width: 64px; height: 64px; display: block; border-radius: 14px; }
 .glyph svg { width: 32px; height: 32px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.16)); }
 /* Ad: 12.5px, orta kalınlık, en fazla iki satır; satırlar hizalı kalsın diye iki satırlık yer ayrılır. */
 .label {
@@ -349,7 +351,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.15"; // her değişiklikte artır: 2.10, 2.11 ...
+  var VERSION = "2.16"; // her değişiklikte artır: 2.10, 2.11 ...
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -393,7 +395,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     { id: "aile", name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)", status: "aktif" },
     { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "aktif", since: "2026-11-04" },
     { id: "dosya", name: "Öğretmen Dosyası", cat: "Ders", hue: 210, icon: "dosya", open: "https://ogretmendosyam.web.app/", repo: "Ogretmendosyasi", tip: "2026-2027 dijital öğretmen dosyası (giriş ister)", status: "aktif", since: "2026-11-04" },
-    { id: "kitap", name: "Künye", cat: "Okul", hue: 165, icon: "kayit", open: U + "Kitap-kayit/", repo: "Kitap-kayit", tip: "Telif sayfası fotoğrafından kitap kaydı, Excel'e aktarır", status: "aktif", since: "2026-11-06" }
+    { id: "kitap", name: "Künye", cat: "Okul", hue: 165, icon: "kayit", img: "kunye-logo.png?v=1", open: U + "Kitap-kayit/", repo: "Kitap-kayit", tip: "Telif sayfası fotoğrafından kitap kaydı, Excel'e aktarır", status: "aktif", since: "2026-11-06" }
   ];
   var STATUS = { aktif: "Aktif", bakimda: "Bakımda", erisilemiyor: "Erişilemiyor", pasif: "Pasif" };
   var STATUS_INFO = {
@@ -471,7 +473,8 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     a.title = p.tip + " · " + STATUS[p.status] + (showCode ? " (kaynak kodu)" : "") + " · Uzun bas: favori";
     a.style.setProperty("--hue", p.hue);
     var g = el("span", "glyph");
-    g.innerHTML = svg(ICONS[p.icon]);
+    if (p.img) { g.className += " logo"; g.innerHTML = '<img src="' + p.img + '" alt="" width="64" height="64">'; }
+    else g.innerHTML = svg(ICONS[p.icon]);
     if (isNew(p)) g.appendChild(el("span", "new", "Yeni"));
     var d = el("span", "dot " + p.status); d.setAttribute("role", "img"); d.setAttribute("aria-label", STATUS[p.status] + ": " + STATUS_INFO[p.status]); d.title = STATUS[p.status] + ": " + STATUS_INFO[p.status];
     g.appendChild(d);

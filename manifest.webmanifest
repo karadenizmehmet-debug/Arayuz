@@ -4,7 +4,7 @@
   "description": "Okul sistemleri, ders içerikleri ve kişisel uygulamalar tek yerde.",
   "id": "./",
   "start_url": "./",
-  "scope": "./",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0f1a22",

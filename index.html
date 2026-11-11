@@ -351,7 +351,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.18"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
+  var VERSION = "2.19"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -470,7 +470,9 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     var a = el("a", "app" + (on ? "" : " off st-" + p.status) + (favs.indexOf(p.id) !== -1 ? " fav" : ""));
     if (on || showCode) {
       a.href = showCode ? G + p.repo : p.open;
-      a.target = "_blank"; a.rel = "noopener noreferrer";
+      // Aynı sitedeki uygulamalar aynı pencerede açılır: kurulu Ekosistem içinde adres çubuğu olmadan tam ekran.
+      // Başka adresteki siteler (MEBBİS, Öğretmen Dosyası) ve kaynak kodu yeni sekmede açılır.
+      if (showCode || p.open.indexOf(U) !== 0) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
     } else {
       a.setAttribute("aria-disabled", "true"); a.tabIndex = 0;
     }
@@ -566,6 +568,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   });
   q.addEventListener("input", render);
   document.addEventListener("visibilitychange", function () { if (!document.hidden) render(); });
+  window.addEventListener("pageshow", function (e) { if (e.persisted) render(); }); // uygulamadan geri dönünce
 
   // Tema: "light" | "dark" | "" (sistem)
   var root = document.documentElement;

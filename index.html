@@ -237,6 +237,14 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 .note { margin: 0; font-size: 12.5px; color: var(--muted); }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+.acts { display: flex; flex-direction: column; gap: 8px; padding-top: 6px; }
+.act {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; padding: 12px 14px; cursor: pointer; text-align: left;
+  font: inherit; color: var(--fg); background: var(--pill); border: 1px solid var(--pill-line); border-radius: 14px;
+}
+.act strong { font-weight: 600; }
+.act span { font-size: 12px; color: var(--muted); word-break: break-all; }
+.act:active { transform: scale(.98); }
 .toast {
   position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom, 0px)); z-index: 20; max-width: min(90vw, 360px);
   display: flex; flex-direction: column; gap: 2px; padding: 10px 16px; border-radius: 16px; font-size: 13px; line-height: 1.3; text-align: center;
@@ -337,7 +345,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
       <span><i style="background:#e5484d"></i>Erişilemiyor</span>
       <span><i style="background:#8b98a5"></i>Pasif</span>
     </div>
-    <p class="note">Uygulamaya uzun basarak favoriye ekle ya da çıkar.</p>
+    <p class="note">Uygulamaya uzun basarak favoriye ekle ya da çıkar. Öğretmen Dosyası'nda uzun basınca (bilgisayarda sağ tık) okul ağı adresi de seçilebilir.</p>
   </div>
   <div class="row">
     <span>Geçmiş</span>
@@ -347,11 +355,18 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     </div>
   </div>
 </dialog>
+<dialog class="sheet" id="actSheet" aria-labelledby="actT">
+  <div class="sheet-h">
+    <h2 id="actT"></h2>
+    <button class="ibtn" type="button" id="actX" aria-label="Kapat"></button>
+  </div>
+  <div class="acts" id="actBox"></div>
+</dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function () {
-  var VERSION = "2.19.1"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
+  var VERSION = "2.20"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -383,6 +398,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   function svg(inner, w) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="' + (w || 1.8) + '" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>'; }
   var CODE = svg('<path d="m8 8-4 4 4 4M16 8l4 4-4 4"/>', 2.4);
 
+  // alt: ikinci adres (ör. okul ağında github.io açılmazsa Firebase). Uzun basınca/sağ tıklayınca seçenek menüsü açılır.
   // status: aktif | bakimda | erisilemiyor | pasif. since: eklenme tarihi (14 gün "Yeni" etiketi çıkar, açılınca kalkar).
   var items = [
     { id: "pano", name: "Dijital Pano", cat: "Okul", hue: 235, icon: "pano", open: U + "digitalpano/", repo: "digitalpano", tip: "Okul panosu", status: "aktif" },
@@ -396,7 +412,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     { id: "nefes", name: "Nefes", cat: "Kişisel", hue: 178, icon: "nefes", open: U + "Quitcigaret/", repo: "Quitcigaret", tip: "Sigara bırakma takibi", status: "aktif" },
     { id: "aile", name: "Aile Takip", cat: "Kişisel", hue: 8, icon: "aile", open: U + "takip/takip.html", repo: "takip", tip: "Aile takip paneli (giriş ister)", status: "aktif" },
     { id: "eokul", name: "e-Okul Fotoğraf", cat: "Okul", hue: 330, icon: "resim", open: U + "Bgremover/", repo: "Bgremover", tip: "Fotoğrafların arka planını toplu siler", status: "aktif", since: "2026-11-04" },
-    { id: "dosya", name: "Öğretmen Dosyası", cat: "Ders", hue: 210, icon: "dosya", open: "https://ogretmendosyam.web.app/", repo: "Ogretmendosyasi", tip: "2026-2027 dijital öğretmen dosyası (giriş ister)", status: "aktif", since: "2026-11-04" },
+    { id: "dosya", name: "Öğretmen Dosyası", cat: "Ders", hue: 210, icon: "dosya", open: U + "Ogretmendosyasi/", alt: "https://ogretmendosyam.web.app/", altName: "Okul ağı adresi (Firebase)", repo: "Ogretmendosyasi", tip: "2026-2027 dijital öğretmen dosyası (giriş ister)", status: "aktif", since: "2026-11-04" },
     { id: "kitap", name: "Künye", cat: "Okul", hue: 165, icon: "kayit", img: "kunye-logo.png?v=1", open: U + "Kitap-kayit/", repo: "Kitap-kayit", tip: "Telif sayfası fotoğrafından kitap kaydı, Excel'e aktarır", status: "aktif", since: "2026-11-06" },
     { id: "webblur", name: "WebBlur", cat: "Okul", hue: 250, icon: "yuz", open: U + "Webblur/", repo: "Webblur", tip: "Fotoğraflardaki yüzleri blur, mozaik veya emoji ile toplu gizler", status: "aktif", since: "2026-11-10" },
     { id: "notlar", name: "Notlar", cat: "Kişisel", hue: 45, icon: "not", open: U + "notlar/", repo: "notlar", tip: "Not, liste ve hatırlatma; telefona kurulur", status: "aktif", since: "2026-11-11" }
@@ -471,12 +487,12 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     if (on || showCode) {
       a.href = showCode ? G + p.repo : p.open;
       // Aynı sitedeki uygulamalar aynı pencerede açılır: kurulu Ekosistem içinde adres çubuğu olmadan tam ekran.
-      // Başka adresteki siteler (MEBBİS, Öğretmen Dosyası) ve kaynak kodu yeni sekmede açılır.
+      // Başka adresteki siteler (MEBBİS) ve kaynak kodu yeni sekmede açılır.
       if (showCode || p.open.indexOf(U) !== 0) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
     } else {
       a.setAttribute("aria-disabled", "true"); a.tabIndex = 0;
     }
-    a.title = p.tip + " · " + STATUS[p.status] + (showCode ? " (kaynak kodu)" : "") + " · Uzun bas: favori";
+    a.title = p.tip + " · " + STATUS[p.status] + (showCode ? " (kaynak kodu)" : "") + (p.alt ? " · Uzun bas / sağ tık: diğer adres" : " · Uzun bas: favori");
     a.style.setProperty("--hue", p.hue);
     var g = el("span", "glyph");
     if (p.img) { g.className += " logo"; g.innerHTML = '<img src="' + p.img + '" alt="" width="64" height="64">'; }
@@ -498,12 +514,15 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
       timer = setTimeout(function () {
         timer = null; lpUntil = Date.now() + 900; // ardından gelen tıklama sayfayı açmasın
         if (navigator.vibrate) { try { navigator.vibrate(18); } catch (err) {} }
-        favToast(p, toggleFav(p.id));
+        if (p.alt && on) openActions(p); else favToast(p, toggleFav(p.id));
       }, 500);
     });
     a.addEventListener("pointermove", function (e) { if (timer && Math.abs(e.clientX - sx) + Math.abs(e.clientY - sy) > 10) cancel(); });
     ["pointerup", "pointercancel", "pointerleave"].forEach(function (ev) { a.addEventListener(ev, cancel); });
-    a.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+    a.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      if (p.alt && on && e.pointerType !== "touch" && Date.now() >= lpUntil) { lpUntil = Date.now() + 900; openActions(p); } // okul bilgisayarında sağ tık
+    });
     a.addEventListener("keydown", function (e) { if (e.key === "f" || e.key === "F") favToast(p, toggleFav(p.id)); });
     a.addEventListener("click", function (e) {
       if (Date.now() < lpUntil) { e.preventDefault(); return; }
@@ -513,6 +532,34 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     });
     return a;
   }
+  // İkinci adresi olan uygulamalar için seçenek menüsü
+  var actSheet = document.getElementById("actSheet");
+  var actT = document.getElementById("actT");
+  var actBox = document.getElementById("actBox");
+  document.getElementById("actX").innerHTML = svg(ICONS.close);
+  document.getElementById("actX").addEventListener("click", function () { closeAct(); });
+  actSheet.addEventListener("click", function (e) { if (e.target === actSheet) closeAct(); });
+  function closeAct() { if (actSheet.close) actSheet.close(); else actSheet.removeAttribute("open"); }
+  function host(u) { try { return new URL(u).host + new URL(u).pathname.replace(/\/$/, ""); } catch (e) { return u; } }
+  function actBtn(title, sub, fn) {
+    var b = el("button", "act"); b.type = "button";
+    b.appendChild(el("strong", "", title)); if (sub) b.appendChild(el("span", "", sub));
+    b.addEventListener("click", function () { closeAct(); fn(); });
+    actBox.appendChild(b);
+  }
+  function go(p, url) {
+    touch(p.id);
+    if (url.indexOf(U) === 0) location.href = url; else window.open(url, "_blank", "noopener");
+  }
+  function openActions(p) {
+    actT.textContent = p.name; actBox.textContent = "";
+    actBtn("GitHub adresiyle aç", host(p.open), function () { go(p, p.open); });
+    actBtn(p.altName || "Diğer adresle aç", host(p.alt), function () { go(p, p.alt); });
+    var fav = favs.indexOf(p.id) !== -1;
+    actBtn(fav ? "Favorilerden çıkar" : "★ Favorilere ekle", "", function () { favToast(p, toggleFav(p.id)); });
+    if (actSheet.showModal) actSheet.showModal(); else actSheet.setAttribute("open", "");
+  }
+
   function fill(box, list) { box.textContent = ""; list.forEach(function (p) { box.appendChild(app(p)); }); }
 
   function render() {

@@ -199,6 +199,7 @@ a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid 
   position: absolute; left: -6px; top: -6px; padding: 1px 6px; border-radius: 999px;
   font-size: 10px; font-weight: 700; line-height: 1.5; color: #fff; background: #e5484d; border: 2px solid var(--wall-a);
 }
+.new.upd { background: #2f7bf5; }
 .star {
   position: absolute; left: -4px; bottom: -4px; width: 17.6px; height: 17.6px; border-radius: 50%; display: none; place-items: center;
   background: #f5b301; color: #5a3d00; border: 2px solid var(--wall-a);
@@ -346,7 +347,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
       <span><i style="background:#e5484d"></i>Erişilemiyor</span>
       <span><i style="background:#8b98a5"></i>Pasif</span>
     </div>
-    <p class="note">Uygulamaya uzun basarak favoriye ekle ya da çıkar. Öğretmen Dosyası'nda uzun basınca (bilgisayarda sağ tık) okul ağı adresi de seçilebilir.</p>
+    <p class="note">Uygulamaya uzun basarak favoriye ekle ya da çıkar. Öğretmen Dosyası'nda uzun basınca (bilgisayarda sağ tık) okul ağı adresi de seçilebilir. Mavi «Güncel» etiketi, uygulama son açışından sonra GitHub'da güncellendiğinde çıkar; açınca kalkar.</p>
   </div>
   <div class="row">
     <span>Geçmiş</span>
@@ -367,7 +368,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.23.1"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
+  var VERSION = "2.24"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -448,6 +449,9 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   var favs = load("genel-arayuz-fav", []);
   var recent = load("genel-arayuz-son", []);
   var opened = load("genel-arayuz-acilan", []);
+  // Güncelleme etiketi: GitHub'daki son gönderim (pushed_at) uygulamayı son açışından yeniyse "Güncel" çıkar.
+  var pushed = load("genel-arayuz-push", {});   // { repo(küçük harf): ISO tarih }
+  var seen = load("genel-arayuz-gorulen", {});  // { uygulama id: son açıldığında bilinen pushed_at }
   try {
     var s = localStorage.getItem("genel-arayuz-kategori");
     if (s && ["Okul", "Ders", "Kişisel", "fav"].indexOf(s) !== -1) filter = s;
@@ -458,7 +462,35 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; }
   function byId(id) { for (var i = 0; i < items.length; i++) if (items[i].id === id) return items[i]; return null; }
   function isNew(p) { return !!p.since && opened.indexOf(p.id) === -1 && (Date.now() - Date.parse(p.since)) / 864e5 <= 14; }
+  function pushedOf(p) { return p.repo ? pushed[p.repo.toLowerCase()] || "" : ""; }
+  function isUpdated(p) { var t = pushedOf(p); return !!t && !!seen[p.id] && Date.parse(t) > Date.parse(seen[p.id]); }
+  function ago(iso) {
+    var m = Math.round((Date.now() - Date.parse(iso)) / 6e4);
+    if (m < 60) return Math.max(1, m) + " dk önce";
+    if (m < 1440) return Math.round(m / 60) + " saat önce";
+    return Math.round(m / 1440) + " gün önce";
+  }
+  function baseline() { // ilk kez görülen uygulamada etiket çıkmasın: mevcut tarih başlangıç kabul edilir
+    var ch = false;
+    items.forEach(function (p) { var t = pushedOf(p); if (t && !seen[p.id]) { seen[p.id] = t; ch = true; } });
+    if (ch) save("genel-arayuz-gorulen", seen);
+  }
+  function checkUpdates() {
+    var last = load("genel-arayuz-push-zaman", 0);
+    if (Date.now() - last < 30 * 6e4) return; // 30 dakikada en çok bir istek (GitHub sınırı saatte 60)
+    fetch("https://api.github.com/users/karadenizmehmet-debug/repos?per_page=100", { headers: { Accept: "application/vnd.github+json" } })
+      .then(function (r) { if (!r.ok) throw r.status; return r.json(); })
+      .then(function (list) {
+        var m = {};
+        list.forEach(function (r) { if (r && r.name && r.pushed_at) m[r.name.toLowerCase()] = r.pushed_at; });
+        pushed = m; save("genel-arayuz-push", m); save("genel-arayuz-push-zaman", Date.now());
+        baseline(); render();
+      })
+      .catch(function () {}); // ağ yoksa ya da sınır dolduysa sessizce geç
+  }
   function touch(id) {
+    var tp = byId(id), t = tp && pushedOf(tp);
+    if (t) { seen[id] = t; save("genel-arayuz-gorulen", seen); }
     recent = [id].concat(recent.filter(function (x) { return x !== id; })).slice(0, 6); // 6 kayıt tutulur, en çok 3'ü gösterilir (tekrar önleme açıkken favoriler atlanır)
     if (opened.indexOf(id) === -1) opened.push(id);
     save("genel-arayuz-son", recent); save("genel-arayuz-acilan", opened);
@@ -495,12 +527,13 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     } else {
       a.setAttribute("aria-disabled", "true"); a.tabIndex = 0;
     }
-    a.title = p.tip + " · " + STATUS[p.status] + (showCode ? " (kaynak kodu)" : "") + (p.alt ? " · Uzun bas / sağ tık: diğer adres" : " · Uzun bas: favori");
+    a.title = p.tip + " · " + STATUS[p.status] + (showCode ? " (kaynak kodu)" : "") + (p.alt ? " · Uzun bas / sağ tık: diğer adres" : " · Uzun bas: favori") + (pushedOf(p) ? " · Son güncelleme: " + ago(pushedOf(p)) : "");
     a.style.setProperty("--hue", p.hue);
     var g = el("span", "glyph");
     if (p.img) { g.className += " logo"; g.innerHTML = '<img src="' + p.img + '" alt="" width="64" height="64">'; }
     else g.innerHTML = svg(ICONS[p.icon]);
     if (isNew(p)) g.appendChild(el("span", "new", "Yeni"));
+    else if (isUpdated(p)) g.appendChild(el("span", "new upd", "Güncel"));
     var d = el("span", "dot " + p.status); d.setAttribute("role", "img"); d.setAttribute("aria-label", STATUS[p.status] + ": " + STATUS_INFO[p.status]); d.title = STATUS[p.status] + ": " + STATUS_INFO[p.status];
     g.appendChild(d);
     var st = el("span", "star"); st.innerHTML = svg(ICONS.star, 2); g.appendChild(st);
@@ -627,7 +660,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     render();
   });
   q.addEventListener("input", render);
-  document.addEventListener("visibilitychange", function () { if (!document.hidden) render(); });
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) { render(); checkUpdates(); } });
   window.addEventListener("pageshow", function (e) { if (e.persisted) render(); }); // uygulamadan geri dönünce
 
   // Tema: "light" | "dark" | "" (sistem)
@@ -686,7 +719,9 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   window.addEventListener("appinstalled", function () { installBtn.hidden = true; installNote.hidden = false; installNote.textContent = "Uygulama ana ekrana yüklendi."; });
 
   themeUi();
+  baseline();
   render();
+  checkUpdates();
 
   // Karşılama: saat, tarih, hava durumu (Akşehir, Open-Meteo, anahtarsız)
   var clockEl = document.getElementById("clock");

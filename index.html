@@ -367,7 +367,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.21"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
+  var VERSION = "2.22"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -402,8 +402,8 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   // alt: ikinci adres (ör. okul ağında github.io açılmazsa Firebase). Uzun basınca/sağ tıklayınca seçenek menüsü açılır.
   // status: aktif | bakimda | erisilemiyor | pasif. since: eklenme tarihi (14 gün "Yeni" etiketi çıkar, açılınca kalkar).
   var items = [
-    { id: "pano", name: "Dijital Pano", cat: "Okul", hue: 235, icon: "pano", open: U + "digitalpano/", repo: "digitalpano", tip: "Okul panosu", status: "aktif" },
-    { id: "panel", name: "Pano Paneli", cat: "Okul", hue: 262, icon: "panel", open: U + "digitalpano/#/panel", repo: "digitalpano", tip: "Pano yönetim paneli (giriş ister)", status: "aktif" },
+    { id: "pano", name: "Dijital Pano", cat: "Okul", hue: 235, icon: "pano", open: U + "digitalpano/", alt: "https://digitalpano-84947.web.app/", altName: "Okul ağı adresi (Firebase)", repo: "digitalpano", tip: "Okul panosu", status: "aktif" },
+    { id: "panel", name: "Pano Paneli", cat: "Okul", hue: 262, icon: "panel", open: U + "digitalpano/#/panel", alt: "https://digitalpano-84947.web.app/#/panel", altName: "Okul ağı adresi (Firebase)", repo: "digitalpano", tip: "Pano yönetim paneli (giriş ister)", status: "aktif" },
     { id: "zil", name: "oZil Kumanda", cat: "Okul", hue: 60, icon: "zil", open: U + "Ozil/kumanda.html", repo: "Ozil", tip: "Okul zili uzaktan kumanda", status: "aktif" },
     { id: "marsi", name: "İstiklal Marşı", cat: "Okul", hue: 25, icon: "bayrak", open: U + "Zilfar/", repo: "Zilfar", tip: "Marşı uzaktan çalan panel", status: "aktif" },
     { id: "yegitek", name: "Yegitek Takip", cat: "Okul", hue: 195, icon: "takip", open: U + "Yegitek/", repo: "Yegitek", tip: "Okul sorumlusu takip uygulaması", status: "aktif" },
@@ -552,10 +552,20 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     touch(p.id);
     if (url.indexOf(U) === 0) location.href = url; else window.open(url, "_blank", "noopener");
   }
+  // Okul ağında github.io açılmadığı için paylaşılan adres Firebase (alt) adresidir.
+  function shareUrl(p, url) {
+    if (navigator.share) { navigator.share({ title: p.name, url: url }).catch(function () {}); return; }
+    function ok() { toast("Adres kopyalandı: " + p.name, host(url)); }
+    function eski() {
+      try { var t = document.createElement("textarea"); t.value = url; t.style.cssText = "position:fixed;opacity:0;top:0;left:0"; document.body.appendChild(t); t.select(); var d = document.execCommand("copy"); document.body.removeChild(t); if (d) ok(); else toast("Adres kopyalanamadı", url); } catch (e) { toast("Adres kopyalanamadı", url); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(ok, eski); else eski();
+  }
   function openActions(p) {
     actT.textContent = p.name; actBox.textContent = "";
     actBtn("GitHub adresiyle aç", host(p.open), function () { go(p, p.open); });
     actBtn(p.altName || "Diğer adresle aç", host(p.alt), function () { go(p, p.alt); });
+    actBtn("Adresi paylaş", host(p.alt), function () { shareUrl(p, p.alt); });
     var fav = favs.indexOf(p.id) !== -1;
     actBtn(fav ? "Favorilerden çıkar" : "★ Favorilere ekle", "", function () { favToast(p, toggleFav(p.id)); });
     if (actSheet.showModal) actSheet.showModal(); else actSheet.setAttribute("open", "");

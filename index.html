@@ -368,7 +368,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.25"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
+  var VERSION = "2.25.1"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -479,13 +479,22 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   }
   function checkUpdates() {
     var last = load("genel-arayuz-push-zaman", 0);
-    if (Date.now() - last < 30 * 6e4) return; // 30 dakikada en çok bir istek (GitHub sınırı saatte 60)
-    fetch("https://api.github.com/users/karadenizmehmet-debug/repos?per_page=100", { headers: { Accept: "application/vnd.github+json" } })
-      .then(function (r) { if (!r.ok) throw r.status; return r.json(); })
+    if (Date.now() - last < 2 * 6e4) return; // 2 dakikada en çok bir istek
+    var etag = load("genel-arayuz-push-etag", "");
+    var h = { Accept: "application/vnd.github+json" };
+    if (etag && Object.keys(pushed).length) h["If-None-Match"] = etag; // değişiklik yoksa 304 döner, GitHub kotasından düşmez
+    fetch("https://api.github.com/users/karadenizmehmet-debug/repos?per_page=100", { headers: h, cache: "no-store" })
+      .then(function (r) {
+        save("genel-arayuz-push-zaman", Date.now());
+        if (r.status === 304) throw 304;
+        if (!r.ok) throw r.status;
+        var e = r.headers.get("ETag"); if (e) save("genel-arayuz-push-etag", e);
+        return r.json();
+      })
       .then(function (list) {
         var m = {};
         list.forEach(function (r) { if (r && r.name && r.pushed_at) m[r.name.toLowerCase()] = r.pushed_at; });
-        pushed = m; save("genel-arayuz-push", m); save("genel-arayuz-push-zaman", Date.now());
+        pushed = m; save("genel-arayuz-push", m);
         baseline(); render();
       })
       .catch(function () {}); // ağ yoksa ya da sınır dolduysa sessizce geç

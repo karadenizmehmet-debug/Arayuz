@@ -224,10 +224,10 @@
     },
     {
       "ad": "Not Giriş",
-      "repo": "notgiris",
+      "repo": "Notgiris",
       "gorunurluk": "açık",
       "kategori": "Okul",
-      "adres": "https://karadenizmehmet-debug.github.io/notgiris/",
+      "adres": "https://karadenizmehmet-debug.github.io/Notgiris/",
       "teknoloji": "HTML/CSS/JS, PWA, Tesseract.js, tarayıcıda rakam tanıma modeli; e-Okul için Tampermonkey betiği (eokul.user.js)",
       "firebase": null,
       "veri": "Telefonun yerel hafızası; veri telefondan çıkmaz",

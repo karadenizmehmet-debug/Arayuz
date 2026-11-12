@@ -367,7 +367,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.23"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
+  var VERSION = "2.23.1"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -418,7 +418,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     { id: "kitap", name: "Künye", cat: "Okul", hue: 165, icon: "kayit", img: "kunye-logo.png?v=1", open: U + "Kitap-kayit/", repo: "Kitap-kayit", tip: "Telif sayfası fotoğrafından kitap kaydı, Excel'e aktarır", status: "aktif", since: "2026-11-06" },
     { id: "webblur", name: "WebBlur", cat: "Okul", hue: 250, icon: "yuz", open: U + "Webblur/", repo: "Webblur", tip: "Fotoğraflardaki yüzleri blur, mozaik veya emoji ile toplu gizler", status: "aktif", since: "2026-11-10" },
     { id: "notlar", name: "Notlar", cat: "Kişisel", hue: 45, icon: "not", open: U + "notlar/", repo: "notlar", tip: "Not, liste ve hatırlatma; telefona kurulur", status: "aktif", since: "2026-11-11" },
-    { id: "notgiris", name: "Not Giriş", cat: "Okul", hue: 120, icon: "puan", open: U + "notgiris/", repo: "notgiris", tip: "Fotoğraftan soru bazlı puanları okur, e-Okul'a aktarır", status: "aktif", since: "2026-11-12" }
+    { id: "notgiris", name: "Not Giriş", cat: "Okul", hue: 120, icon: "puan", open: U + "Notgiris/", repo: "Notgiris", tip: "Fotoğraftan soru bazlı puanları okur, e-Okul'a aktarır", status: "aktif", since: "2026-11-12" }
   ];
   var STATUS = { aktif: "Aktif", bakimda: "Bakımda", erisilemiyor: "Erişilemiyor", pasif: "Pasif" };
   var STATUS_INFO = {

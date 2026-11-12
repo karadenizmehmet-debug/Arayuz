@@ -1,7 +1,7 @@
 {
   "aciklama": "Karadeniz Ekosistemi proje envanteri. Uygulama bu dosyayı okumaz; yalnızca kayıt amaçlıdır. Yeni proje eklenince ya da bir projenin adresi, teknolojisi, Firebase projesi değişince güncelle.",
   "hazirlayan": "Mehmet Karadeniz, 2026-2027",
-  "guncelleme": "2026-11-11",
+  "guncelleme": "2026-11-12",
   "hesap": "karadenizmehmet-debug",
   "projeler": [
     {
@@ -219,6 +219,18 @@
       "firebase": null,
       "veri": "localStorage; yedek JSON",
       "surumYeri": "index.html → VERSION",
+      "durum": "aktif",
+      "hubda": true
+    },
+    {
+      "ad": "Not Giriş",
+      "repo": "notgiris",
+      "gorunurluk": "açık",
+      "kategori": "Okul",
+      "adres": "https://karadenizmehmet-debug.github.io/notgiris/",
+      "teknoloji": "HTML/CSS/JS, PWA, Tesseract.js, tarayıcıda rakam tanıma modeli; e-Okul için Tampermonkey betiği (eokul.user.js)",
+      "firebase": null,
+      "veri": "Telefonun yerel hafızası; veri telefondan çıkmaz",
       "durum": "aktif",
       "hubda": true
     }

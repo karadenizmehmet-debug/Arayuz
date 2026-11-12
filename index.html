@@ -264,6 +264,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
       <p class="sub">Tüm sistemlerim tek yerde.</p>
     </div>
     <div class="hbtns">
+      <button class="ibtn paylasBtn" type="button"></button>
       <button class="ibtn" type="button" id="themeBtn"></button>
       <button class="ibtn" type="button" id="setBtn" aria-label="Ayarlar" aria-haspopup="dialog"></button>
     </div>
@@ -366,7 +367,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.20"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
+  var VERSION = "2.21"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -798,6 +799,29 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
   loadTicker();
   setInterval(loadTicker, 10 * 60 * 1000);
   document.addEventListener("visibilitychange", function () { if (!document.hidden) loadTicker(); });
+})();
+</script>
+<script>
+// Adres paylaş düğmesi: önce sistem paylaşımı, olmazsa adresi panoya kopyalar. Mehmet Karadeniz, 2026-2027
+(function () {
+  var SH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4"/></svg>';
+  var OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+  function adres() { return location.href.split(/[?#]/)[0]; }
+  function kopyala(u) {
+    try { var t = document.createElement("textarea"); t.value = u; t.style.cssText = "position:fixed;opacity:0;top:0;left:0"; document.body.appendChild(t); t.select(); var ok = document.execCommand("copy"); document.body.removeChild(t); return ok; } catch (e) { return false; }
+  }
+  function tamam(b) { b.innerHTML = OK; b.title = "Adres kopyalandı"; setTimeout(function () { b.innerHTML = SH; b.title = "Adresi paylaş"; }, 1800); }
+  function paylas(b) {
+    var u = adres();
+    if (navigator.share) { navigator.share({ title: document.title, url: u }).catch(function () {}); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(function () { tamam(b); }, function () { if (kopyala(u)) tamam(b); });
+    else if (kopyala(u)) tamam(b);
+  }
+  var bs = document.querySelectorAll(".paylasBtn");
+  for (var i = 0; i < bs.length; i++) {
+    bs[i].innerHTML = SH; bs[i].title = "Adresi paylaş"; bs[i].setAttribute("aria-label", "Adresi paylaş");
+    bs[i].addEventListener("click", function () { paylas(this); });
+  }
 })();
 </script>
 </body>

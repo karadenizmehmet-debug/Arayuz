@@ -233,6 +233,19 @@
       "veri": "Telefonun yerel hafızası; veri telefondan çıkmaz",
       "durum": "aktif",
       "hubda": true
+    },
+    {
+      "ad": "Soru Defteri",
+      "repo": "sorudefteri",
+      "gorunurluk": "açık",
+      "kategori": "Ders",
+      "adres": "https://karadenizmehmet-debug.github.io/sorudefteri/",
+      "teknoloji": "Tek dosya HTML/CSS/JS",
+      "firebase": null,
+      "veri": "IndexedDB (cihazda); JSON yedek",
+      "surumYeri": "index.html → VERSION",
+      "durum": "aktif",
+      "hubda": true
     }
   ]
 }

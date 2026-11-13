@@ -368,7 +368,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
 
 <script>
 (function () {
-  var VERSION = "2.25.1"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
+  var VERSION = "2.26"; // düzeltme +0.0.1 (2.17.1), yeni özellik +0.1 (2.18)
   if ("serviceWorker" in navigator) { try { navigator.serviceWorker.register("sw.js").catch(function () {}); } catch (e) {} }
   document.getElementById("ver").textContent = "v" + VERSION;
   document.getElementById("fver").textContent = "Sürüm " + VERSION;
@@ -393,6 +393,7 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     puan: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M8 10h3M8 14h3M8 18h3"/><path d="m13.5 10 1.2 1.2 2.3-2.4M13.5 15.5h3"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>',
     defter: '<rect x="6" y="3" width="13" height="18" rx="2"/><path d="M4 7h3M4 12h3M4 17h3"/><path d="M11 9.5a2 2 0 1 1 2.8 1.8c-.5.3-.8.7-.8 1.4"/><path d="M13 16h.01"/>',
+    kilit: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/>',
     not: '<path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8 12h8M8 16h5"/>',
     moon: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
@@ -421,7 +422,8 @@ dialog.sheet::backdrop { background: rgba(8,16,22,.45); }
     { id: "webblur", name: "WebBlur", cat: "Okul", hue: 250, icon: "yuz", open: U + "Webblur/", repo: "Webblur", tip: "Fotoğraflardaki yüzleri blur, mozaik veya emoji ile toplu gizler", status: "aktif", since: "2026-11-10" },
     { id: "notlar", name: "Notlar", cat: "Kişisel", hue: 45, icon: "not", open: U + "notlar/", repo: "notlar", tip: "Not, liste ve hatırlatma; telefona kurulur", status: "aktif", since: "2026-11-11" },
     { id: "notgiris", name: "Not Giriş", cat: "Okul", hue: 120, icon: "puan", open: U + "Notgiris/", repo: "Notgiris", tip: "Fotoğraftan soru bazlı puanları okur, e-Okul'a aktarır", status: "aktif", since: "2026-11-12" },
-    { id: "sorudefteri", name: "Soru Defteri", cat: "Ders", hue: 340, icon: "defter", open: U + "sorudefteri/", repo: "sorudefteri", tip: "Yanlış ve boş soruları fotoğrafla, temizle, A4'e yazdır", status: "aktif", since: "2026-11-12" }
+    { id: "sorudefteri", name: "Soru Defteri", cat: "Ders", hue: 340, icon: "defter", open: U + "sorudefteri/", repo: "sorudefteri", tip: "Yanlış ve boş soruları fotoğrafla, temizle, A4'e yazdır", status: "aktif", since: "2026-11-12" },
+    { id: "ks", name: "Şifre Kasası", cat: "Kişisel", hue: 275, icon: "kilit", open: U + "Ks/", repo: "Ks", tip: "Şifreli yerel şifre yöneticisi", status: "aktif", since: "2026-11-13" }
   ];
   var STATUS = { aktif: "Aktif", bakimda: "Bakımda", erisilemiyor: "Erişilemiyor", pasif: "Pasif" };
   var STATUS_INFO = {
